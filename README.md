@@ -19,6 +19,6 @@ The `JAVA PROJECTS` view allows you to manage your dependencies. More details ca
 
 
 # TO-DOs
-- [ ] add feature to authenticate admin and user differently.
 - [x] add java and postgres integration and run to test.
+- [ ] add feature to authenticate admin and user differently.
 - [ ] while doing the tasks, make sure you are taking care of security and using principles of OOPs.
