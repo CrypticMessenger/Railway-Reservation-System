@@ -68,8 +68,6 @@ public class App {
         }
         br.close();
 
-        // int ans = app.getCount("SELECT count(*) FROM classes");
         System.out.println("Hello, World!");
-        // System.out.println(ans);
     }
 }
