@@ -9,9 +9,6 @@ create table date_train_records(
 );
 
 
-
-
--- ! changes
 CREATE OR REPLACE FUNCTION check_avail_pro()
   RETURNS TRIGGER 
   LANGUAGE PLPGSQL
@@ -95,8 +92,6 @@ BEGIN
           primary key (coach_num,berth_num)
         )';
 
-        
-         
             counter := 0;
         
             while counter <temp_num_passenger loop
@@ -152,7 +147,7 @@ BEGIN
         || quote_literal(temp_date)
         ;
     else 
-      raise notice 'SEATS UNAVAILABLE!!😭';
+      raise exception using message = 'SEATS UNAVAILABLE!!',errcode = 'P3333';
     end if;
 
 
@@ -250,18 +245,6 @@ BEGIN
 
         counter := counter+1;
       end loop;
-        
-
-
-
-
-
-
-
-
-
-
-
 
       EXECUTE 'Update  '
         || quote_ident(temp1)
@@ -271,7 +254,7 @@ BEGIN
         || quote_literal(temp_date)
         ;
     else 
-      raise notice 'SEATS UNAVAILABLE!!😭';
+      raise exception using message = 'SEATS UNAVAILABLE!!',errcode = 'P3333';
     end if; 
   end if;
 
@@ -279,13 +262,6 @@ BEGIN
 	RETURN NEW;
 END;
 $$;
-
-
-
-
-
-
-
 
 
 CREATE OR REPLACE FUNCTION make_train_table()
@@ -360,9 +336,6 @@ BEGIN
       primary key (req_id)
     )';
 
-
-
-
     EXECUTE 'create trigger '  
     || quote_ident(temp3)
     ||' before insert on '
@@ -383,16 +356,10 @@ CREATE TRIGGER create_train_table
   FOR EACH row
   EXECUTE PROCEDURE make_train_table();
 
-
-
 -- ! by admin
 -- ! date need to be parsed properly
-
-
-
-
-
-insert into date_train_records (date, train_id,num_ac,num_slr) values ('11132002','12234',23,22);
-insert into date_train_records (date, train_id,num_ac,num_slr) values ('13132002','12231',22,23);
-insert into bookingq_11132002_12234 (date, train_id, num_passenger,pref,names,ages, genders) values ('11132002','12234',4,'ac','A,B,C,D','18,19,20,7','M,M,F,F');
-insert into bookingq_11132002_12234 (date, train_id, num_passenger,pref,names,ages, genders) values ('11132002','12234',4,'ac','E,F,G,H','18,19,20,7','M,M,F,F');
+-- insert into date_train_records (date, train_id,num_ac,num_slr) values ('11132002','12234',23,22);
+-- insert into date_train_records (date, train_id,num_ac,num_slr) values ('13132002','12231',22,23);
+-- fslr
+-- insert into bookingq_11132002_12234 (date, train_id, num_passenger,pref,names,ages, genders) values ('11132002','12234',4,'ac','A,B,C,D','18,19,20,7','M,M,F,F');
+-- insert into bookingq_11132002_12234 (date, train_id, num_passenger,pref,names,ages, genders) values ('11132002','12234',4,'ac','E,F,G,H','18,19,20,7','M,M,F,F');

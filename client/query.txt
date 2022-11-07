@@ -1,3 +1,0 @@
-select * from classes
-select count(*) as cnt from classes;
-FINISH

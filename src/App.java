@@ -10,7 +10,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class App {
-    private final String url = "jdbc:postgresql://localhost/postgres";
+    private final String url = "jdbc:postgresql://localhost/railway_reservation_system";
     private final String user = "postgres";
     private final String password = "1421";
 
@@ -57,17 +57,59 @@ public class App {
         App app = new App();
 
         Connection conn = app.connect();
-
         File file = new File(
-                "D:\\Desktop\\Multi-Thread_sample\\Multi-Thread_sample\\testSubject\\Experiment1\\client\\query.txt");
+                "D:\\Desktop\\Multi-Thread_sample\\Multi-Thread_sample\\testSubject\\Experiment1\\client\\admin.txt");
         BufferedReader br = new BufferedReader(new FileReader(file));
         String st;
-        while ((st = br.readLine()) != null && !(st.equals("FINISH"))) {
-            System.out.println(st);
-            app.getResultSet(conn, st);
+        while ((st = br.readLine()) != null && !(st.equals("#"))) {
+            // System.out.println(st);
+
+            String[] parameters = st.split(" ");
+            String date = parameters[1].replace("-", "");
+            String query = "insert into date_train_records (date,train_id,num_ac,num_slr) values (" + date + ","
+                    + parameters[0] + "," + parameters[2] + "," + parameters[3] + ")";
+
+            app.getResultSet(conn, query);
         }
+
         br.close();
 
-        System.out.println("Hello, World!");
+        file = new File(
+                "D:\\Desktop\\Multi-Thread_sample\\Multi-Thread_sample\\testSubject\\Experiment1\\client\\requests.txt");
+        br = new BufferedReader(new FileReader(file));
+        while ((st = br.readLine()) != null && !(st.equals("#"))) {
+            // System.out.println(st);
+            st = st.replace(",", "");
+            String[] parameters = st.split(" ");
+            int len = parameters.length;
+            String date = parameters[len - 2].replace("-", "");
+
+            String passenger_names = "";
+            String passenger_genders = "";
+            String passenger_ages = "";
+            int num_passenger = Integer.parseInt(parameters[0]);
+            for (int i = 1; i <= num_passenger; i++) {
+                if (i != num_passenger) {
+                    passenger_names += parameters[i] + ",";
+                    passenger_ages += parameters[i + num_passenger] + ",";
+                    passenger_genders += parameters[i + 2 * num_passenger] + ",";
+                } else {
+                    passenger_names += parameters[i];
+                    passenger_ages += parameters[i + num_passenger];
+                    passenger_genders += parameters[i + 2 * num_passenger];
+                }
+            }
+
+            // TODO: add stored procedure
+            String query = "insert into bookingq_" + date + "_" + parameters[len - 3]
+                    + " (date, train_id, num_passenger,pref,names,ages, genders) values ('" + date + "','"
+                    + parameters[len - 3] + "'," + parameters[0] + ",'" + (parameters[len - 1]).toLowerCase() + "',"
+                    + "'" + passenger_names + "'"
+                    + "," + "'" + passenger_ages + "'" + "," + "'" + passenger_genders + "'" + ")";
+
+            // System.out.println(query);
+            app.getResultSet(conn, query);
+        }
+        br.close();
     }
 }
