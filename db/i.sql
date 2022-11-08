@@ -9,6 +9,10 @@ create table date_train_records(
 );
 
 
+
+
+
+-- ! changes
 CREATE OR REPLACE FUNCTION check_avail_pro()
   RETURNS TRIGGER 
   LANGUAGE PLPGSQL
@@ -32,6 +36,7 @@ declare
  berth_num integer;
  coach_num integer;
  temp_type varchar(255);
+ 
 
 BEGIN
   -- ! refractor the var names
@@ -54,7 +59,6 @@ BEGIN
         starting_seat_num := temp_row.filled_ac_count;
         PNR:= CONCAT(temp_date,temp_train_id,starting_seat_num,'0');
         ticket := CONCAT('passenger_',PNR);
-        raise notice 'PNR: %',PNR;
         EXECUTE 'create table if not exists '
         || quote_ident(tickets)
         || ' (
@@ -92,6 +96,8 @@ BEGIN
           primary key (coach_num,berth_num)
         )';
 
+        
+         
             counter := 0;
         
             while counter <temp_num_passenger loop
@@ -136,7 +142,19 @@ BEGIN
 
               counter := counter+1;
             end loop;
-        
+
+       
+        EXECUTE 'select * from '
+        || quote_ident(tickets) 
+        || ' where pnr = '
+        || quote_literal(PNR)
+        ;
+
+        EXECUTE 'select * from '
+        || quote_ident(ticket) 
+        ;
+
+
 
 
         EXECUTE 'Update  '
@@ -157,7 +175,6 @@ BEGIN
       starting_seat_num := temp_row.filled_slr_count ;
       PNR:= CONCAT(temp_date,temp_train_id,starting_seat_num,'1');
       ticket := CONCAT('passenger_',PNR);
-      raise notice 'PNR: %',PNR;
       EXECUTE 'create table if not exists '
       || quote_ident(tickets)
       || ' (
@@ -245,6 +262,18 @@ BEGIN
 
         counter := counter+1;
       end loop;
+        
+
+
+
+
+
+
+
+
+
+
+
 
       EXECUTE 'Update  '
         || quote_ident(temp1)
@@ -262,6 +291,13 @@ BEGIN
 	RETURN NEW;
 END;
 $$;
+
+
+
+
+
+
+
 
 
 CREATE OR REPLACE FUNCTION make_train_table()
@@ -336,14 +372,15 @@ BEGIN
       primary key (req_id)
     )';
 
+
+
+
     EXECUTE 'create trigger '  
     || quote_ident(temp3)
     ||' before insert on '
     || quote_ident(temp2)
     || ' for each row execute procedure check_avail_pro()';
 
-  -- ! remove
-  raise notice '% ',temp1;
 
 
 	RETURN NEW;
@@ -356,10 +393,16 @@ CREATE TRIGGER create_train_table
   FOR EACH row
   EXECUTE PROCEDURE make_train_table();
 
+
+
 -- ! by admin
 -- ! date need to be parsed properly
+
+
+
+
+
 -- insert into date_train_records (date, train_id,num_ac,num_slr) values ('11132002','12234',23,22);
 -- insert into date_train_records (date, train_id,num_ac,num_slr) values ('13132002','12231',22,23);
--- fslr
 -- insert into bookingq_11132002_12234 (date, train_id, num_passenger,pref,names,ages, genders) values ('11132002','12234',4,'ac','A,B,C,D','18,19,20,7','M,M,F,F');
 -- insert into bookingq_11132002_12234 (date, train_id, num_passenger,pref,names,ages, genders) values ('11132002','12234',4,'ac','E,F,G,H','18,19,20,7','M,M,F,F');

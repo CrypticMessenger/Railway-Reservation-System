@@ -29,7 +29,6 @@ public class App {
         try {
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(query);
-
             ResultSetMetaData rsmd = rs.getMetaData();
             int columnsNumber = rsmd.getColumnCount();
             for (int i = 1; i <= columnsNumber; i++) {
@@ -49,6 +48,7 @@ public class App {
             }
         } catch (SQLException e) {
             System.err.println(e.getMessage());
+            System.err.println(e.getErrorCode());
         }
 
     }
@@ -57,6 +57,7 @@ public class App {
         App app = new App();
 
         Connection conn = app.connect();
+
         File file = new File(
                 "D:\\Desktop\\Multi-Thread_sample\\Multi-Thread_sample\\testSubject\\Experiment1\\client\\admin.txt");
         BufferedReader br = new BufferedReader(new FileReader(file));
