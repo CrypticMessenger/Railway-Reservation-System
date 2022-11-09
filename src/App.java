@@ -1,3 +1,4 @@
+//! remove slr from requests.txt, use sl instead.
 
 import java.io.BufferedReader;
 import java.io.File;
