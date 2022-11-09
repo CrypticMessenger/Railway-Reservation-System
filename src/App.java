@@ -26,30 +26,35 @@ public class App {
         return conn;
     }
 
-    public void getResultSet(Connection conn, String query) {
+    public void getResultSet(Connection conn, String query, int type) {
         try {
+            // 1 : request
             Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery(query);
-            ResultSetMetaData rsmd = rs.getMetaData();
-            int columnsNumber = rsmd.getColumnCount();
-            for (int i = 1; i <= columnsNumber; i++) {
-                if (i > 1)
-                    System.out.print("  ");
-                System.out.print(rsmd.getColumnName(i));
+            // ResultSet rs = stmt.executeQuery(query);
+            int rs = stmt.executeUpdate(query);
+            if (type == 1) {
+                System.out.println("Ticket Booked successfully!");
             }
-            System.out.println("");
-            while (rs.next()) {
-                for (int i = 1; i <= columnsNumber; i++) {
-                    if (i > 1)
-                        System.out.print("  ");
-                    String columnValue = rs.getString(i);
-                    System.out.print(columnValue + " ");
-                }
-                System.out.println("");
-            }
+            // ResultSetMetaData rsmd = rs.getMetaData();
+            // int columnsNumber = rsmd.getColumnCount();
+            // for (int i = 1; i <= columnsNumber; i++) {
+            // if (i > 1)
+            // System.out.print(" ");
+            // System.out.print(rsmd.getColumnName(i));
+            // }
+            // System.out.println("");
+            // while (rs.next()) {
+            // for (int i = 1; i <= columnsNumber; i++) {
+            // if (i > 1)
+            // System.out.print(" ");
+            // String columnValue = rs.getString(i);
+            // System.out.print(columnValue + " ");
+            // }
+            // System.out.println("");
+            // }
         } catch (SQLException e) {
-            System.err.println(e.getMessage());
-            System.err.println(e.getErrorCode());
+            System.out.println("Seats Unavailable");
+
         }
 
     }
@@ -71,7 +76,7 @@ public class App {
             String query = "insert into date_train_records (date,train_id,num_ac,num_slr) values (" + date + ","
                     + parameters[0] + "," + parameters[2] + "," + parameters[3] + ")";
 
-            app.getResultSet(conn, query);
+            app.getResultSet(conn, query, 0);
         }
 
         br.close();
@@ -110,7 +115,7 @@ public class App {
                     + "," + "'" + passenger_ages + "'" + "," + "'" + passenger_genders + "'" + ")";
 
             // System.out.println(query);
-            app.getResultSet(conn, query);
+            app.getResultSet(conn, query, 1);
         }
         br.close();
     }
