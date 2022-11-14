@@ -5,7 +5,11 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.sql.Statement;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.net.Socket;
+import java.sql.Connection;
 import java.util.StringTokenizer;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -13,9 +17,34 @@ import java.util.concurrent.Executors;
 class QueryRunner implements Runnable {
     // Declare socket for client access
     protected Socket socketConnection;
+    // Declare connection to database
+    protected Connection conn;
 
+    // TODO: remove this constructor
     public QueryRunner(Socket clientSocket) {
         this.socketConnection = clientSocket;
+    }
+
+    public QueryRunner(Socket clientSocket, Connection conn1) {
+        this.socketConnection = clientSocket;
+        this.conn = conn1;
+    }
+
+    public void getResultSet(Connection conn, String query, int type) {
+        try {
+            // 1 : request
+            Statement stmt = conn.createStatement();
+            // ResultSet rs = stmt.executeQuery(query);
+            int rs = stmt.executeUpdate(query);
+            if (type == 1) {
+                System.out.println("Ticket Booked successfully!");
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Seats Unavailable");
+
+        }
+
     }
 
     public void run() {
@@ -29,20 +58,14 @@ class QueryRunner implements Runnable {
             BufferedWriter bufferedOutput = new BufferedWriter(outputStream);
             PrintWriter printWriter = new PrintWriter(bufferedOutput, true);
 
-            String clientCommand = "";
+            String st = "";
             String responseQuery = "";
             String queryInput = "";
 
             while (true) {
                 // Read client query
-                clientCommand = bufferedInput.readLine();
-
-                // Tokenize here
-                StringTokenizer tokenizer = new StringTokenizer(clientCommand);
-                queryInput = tokenizer.nextToken();
-                // what does StringTokenizer do?
-
-                if (queryInput.equals("#")) {
+                st = bufferedInput.readLine();
+                if (st.equals("#")) {
                     String returnMsg = "Connection Terminated - client : "
                             + socketConnection.getRemoteSocketAddress().toString();
                     System.out.println(returnMsg);
@@ -54,6 +77,37 @@ class QueryRunner implements Runnable {
                     socketConnection.close();
                     return;
                 }
+                System.out.println(st);
+                st = st.replace(",", "");
+                String[] parameters = st.split(" ");
+                int len = parameters.length;
+                String date = parameters[len - 2].replace("-", "");
+
+                String passenger_names = "";
+                String passenger_genders = "";
+                String passenger_ages = "";
+                int num_passenger = Integer.parseInt(parameters[0]);
+                for (int i = 1; i <= num_passenger; i++) {
+                    if (i != num_passenger) {
+                        passenger_names += parameters[i] + ",";
+                        passenger_ages += parameters[i + num_passenger] + ",";
+                        passenger_genders += parameters[i + 2 * num_passenger] + ",";
+                    } else {
+                        passenger_names += parameters[i];
+                        passenger_ages += parameters[i + num_passenger];
+                        passenger_genders += parameters[i + 2 * num_passenger];
+                    }
+                }
+
+                // TODO: add stored procedure
+                // TODO: create functions
+                String query = "insert into bookingq_" + date + "_" + parameters[len - 3]
+                        + " (date, train_id, num_passenger,pref,names,ages, genders) values ('" + date + "','"
+                        + parameters[len - 3] + "'," + parameters[0] + ",'" + (parameters[len - 1]).toLowerCase() + "',"
+                        + "'" + passenger_names + "'"
+                        + "," + "'" + passenger_ages + "'" + "," + "'" + passenger_genders + "'" + ")";
+
+                System.out.println(query);
 
                 // -------------- your DB code goes here----------------------------
                 // try
@@ -87,9 +141,25 @@ class QueryRunner implements Runnable {
 public class ServiceModule {
     static int serverPort = 7005;
     static int numServerCores = 2;
+    private final String url = "jdbc:postgresql://localhost/railway_reservation_system";
+    private final String user = "postgres";
+    private final String password = "1421";
+
+    public Connection connect() {
+        Connection conn = null;
+        try {
+            conn = DriverManager.getConnection(url, user, password);
+            System.out.println("Connected to the PostgreSQL server successfully.");
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return conn;
+    }
 
     // ------------ Main----------------------
     public static void main(String[] args) throws IOException {
+        ServiceModule app = new ServiceModule();
+        Connection conn = app.connect();
         // Creating a thread pool
         ExecutorService executorService = Executors.newFixedThreadPool(numServerCores);
 
@@ -106,15 +176,9 @@ public class ServiceModule {
                     + socketConnection.getRemoteSocketAddress().toString()
                     + "\n");
             // Create a runnable task
-            Runnable runnableTask = new QueryRunner(socketConnection);
+            Runnable runnableTask = new QueryRunner(socketConnection, conn);
             // Submit task for execution
             executorService.submit(runnableTask);
         }
     }
 }
-
-// connect to database using sockets
-// http://www.java2s.com/Code/Java/Network-Protocol/Connecttoadatabaseusingsockets.htm
-
-// java - How to use Socket to connect to a database? - Stack Overflow
-// http://stackoverflow.com/questions/10000000/how-to-use-socket-to-connect-to-a-database
