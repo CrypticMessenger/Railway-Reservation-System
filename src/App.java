@@ -81,42 +81,45 @@ public class App {
 
         br.close();
 
-        file = new File(
-                "D:\\Desktop\\Multi-Thread_sample\\Multi-Thread_sample\\testSubject\\Experiment1\\client\\requests.txt");
-        br = new BufferedReader(new FileReader(file));
-        while ((st = br.readLine()) != null && !(st.equals("#"))) {
-            // System.out.println(st);
-            st = st.replace(",", "");
-            String[] parameters = st.split(" ");
-            int len = parameters.length;
-            String date = parameters[len - 2].replace("-", "");
+        // file = new File(
+        // "D:\\Desktop\\Multi-Thread_sample\\Multi-Thread_sample\\testSubject\\Experiment1\\client\\requests.txt");
+        // br = new BufferedReader(new FileReader(file));
+        // while ((st = br.readLine()) != null && !(st.equals("#"))) {
+        // // System.out.println(st);
+        // st = st.replace(",", "");
+        // String[] parameters = st.split(" ");
+        // int len = parameters.length;
+        // String date = parameters[len - 2].replace("-", "");
 
-            String passenger_names = "";
-            String passenger_genders = "";
-            String passenger_ages = "";
-            int num_passenger = Integer.parseInt(parameters[0]);
-            for (int i = 1; i <= num_passenger; i++) {
-                if (i != num_passenger) {
-                    passenger_names += parameters[i] + ",";
-                    passenger_ages += parameters[i + num_passenger] + ",";
-                    passenger_genders += parameters[i + 2 * num_passenger] + ",";
-                } else {
-                    passenger_names += parameters[i];
-                    passenger_ages += parameters[i + num_passenger];
-                    passenger_genders += parameters[i + 2 * num_passenger];
-                }
-            }
+        // String passenger_names = "";
+        // String passenger_genders = "";
+        // String passenger_ages = "";
+        // int num_passenger = Integer.parseInt(parameters[0]);
+        // for (int i = 1; i <= num_passenger; i++) {
+        // if (i != num_passenger) {
+        // passenger_names += parameters[i] + ",";
+        // passenger_ages += parameters[i + num_passenger] + ",";
+        // passenger_genders += parameters[i + 2 * num_passenger] + ",";
+        // } else {
+        // passenger_names += parameters[i];
+        // passenger_ages += parameters[i + num_passenger];
+        // passenger_genders += parameters[i + 2 * num_passenger];
+        // }
+        // }
 
-            // TODO: add stored procedure
-            String query = "insert into bookingq_" + date + "_" + parameters[len - 3]
-                    + " (date, train_id, num_passenger,pref,names,ages, genders) values ('" + date + "','"
-                    + parameters[len - 3] + "'," + parameters[0] + ",'" + (parameters[len - 1]).toLowerCase() + "',"
-                    + "'" + passenger_names + "'"
-                    + "," + "'" + passenger_ages + "'" + "," + "'" + passenger_genders + "'" + ")";
+        // // TODO: add stored procedure
+        // String query = "insert into bookingq_" + date + "_" + parameters[len - 3]
+        // + " (date, train_id, num_passenger,pref,names,ages, genders) values ('" +
+        // date + "','"
+        // + parameters[len - 3] + "'," + parameters[0] + ",'" + (parameters[len -
+        // 1]).toLowerCase() + "',"
+        // + "'" + passenger_names + "'"
+        // + "," + "'" + passenger_ages + "'" + "," + "'" + passenger_genders + "'" +
+        // ")";
 
-            // System.out.println(query);
-            app.getResultSet(conn, query, 1);
-        }
-        br.close();
+        // // System.out.println(query);
+        // app.getResultSet(conn, query, 1);
+        // }
+        // br.close();
     }
 }

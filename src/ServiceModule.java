@@ -107,8 +107,8 @@ class QueryRunner implements Runnable {
                         + "'" + passenger_names + "'"
                         + "," + "'" + passenger_ages + "'" + "," + "'" + passenger_genders + "'" + ")";
 
-                System.out.println(query);
-
+                // System.out.println(query);
+                getResultSet(conn, query, 1);
                 // -------------- your DB code goes here----------------------------
                 // try
                 // {
