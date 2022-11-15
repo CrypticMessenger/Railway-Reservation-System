@@ -53,7 +53,7 @@ public class App {
             // System.out.println("");
             // }
         } catch (SQLException e) {
-            System.out.println("Seats Unavailable");
+            System.out.println(e.getMessage());
 
         }
 
