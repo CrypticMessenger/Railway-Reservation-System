@@ -30,20 +30,21 @@ class QueryRunner implements Runnable {
         this.conn = conn1;
     }
 
-    public void getResultSet(Connection conn, String query, int type) {
+    public String getResultSet(Connection conn, String query, int type) {
         try {
             // 1 : request
             Statement stmt = conn.createStatement();
             // ResultSet rs = stmt.executeQuery(query);
             int rs = stmt.executeUpdate(query);
             if (type == 1) {
-                System.out.println("Ticket Booked successfully!");
+                return ("Ticket Booked successfully!");
             }
 
         } catch (SQLException e) {
-            System.out.println("Seats Unavailable");
+            System.out.println(e.getMessage());
 
         }
+        return "Seats Unavailable";
 
     }
 
@@ -117,9 +118,9 @@ class QueryRunner implements Runnable {
                             + "," + "'" + passenger_ages + "'" + "," + "'" + passenger_genders + "'" + ")";
 
                     // System.out.println(query);
-                    getResultSet(conn, query, 1);
+                    responseQuery = getResultSet(conn, query, 1);
 
-                    responseQuery = "******* Dummy result ******";
+                    // = "******* Dummy result ******";
 
                     // ----------------------------------------------------------------
 
