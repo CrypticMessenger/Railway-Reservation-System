@@ -28,6 +28,7 @@ class sendQuery implements Runnable {
             String add2 = "response\\";
             // Files for input queries and responses
             String inputfile = Thread.currentThread().getName() + "_input.txt";
+
             String outputfile = Thread.currentThread().getName() + "_output.txt";
 
             // -----Initialising the Input & ouput file-streams and buffers-------

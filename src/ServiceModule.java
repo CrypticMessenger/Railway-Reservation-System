@@ -63,70 +63,83 @@ class QueryRunner implements Runnable {
             String queryInput = "";
 
             while (true) {
+                try {
+                    conn.setAutoCommit(false);
+                    conn.setTransactionIsolation(8); // serilizable
+                } catch (SQLException e2) {
+                    e2.printStackTrace();
+                    break;
+                }
                 // Read client query
-                st = bufferedInput.readLine();
-                if (st.equals("#")) {
-                    String returnMsg = "Connection Terminated - client : "
-                            + socketConnection.getRemoteSocketAddress().toString();
-                    System.out.println(returnMsg);
-                    inputStream.close();
-                    bufferedInput.close();
-                    outputStream.close();
-                    bufferedOutput.close();
-                    printWriter.close();
-                    socketConnection.close();
-                    return;
-                }
-                System.out.println(st);
-                st = st.replace(",", "");
-                String[] parameters = st.split(" ");
-                int len = parameters.length;
-                String date = parameters[len - 2].replace("-", "");
-
-                String passenger_names = "";
-                String passenger_genders = "";
-                String passenger_ages = "";
-                int num_passenger = Integer.parseInt(parameters[0]);
-                for (int i = 1; i <= num_passenger; i++) {
-                    if (i != num_passenger) {
-                        passenger_names += parameters[i] + ",";
-                        passenger_ages += parameters[i + num_passenger] + ",";
-                        passenger_genders += parameters[i + 2 * num_passenger] + ",";
-                    } else {
-                        passenger_names += parameters[i];
-                        passenger_ages += parameters[i + num_passenger];
-                        passenger_genders += parameters[i + 2 * num_passenger];
+                try {
+                    st = bufferedInput.readLine();
+                    if (st.equals("#")) {
+                        String returnMsg = "Connection Terminated - client : "
+                                + socketConnection.getRemoteSocketAddress().toString();
+                        System.out.println(returnMsg);
+                        inputStream.close();
+                        bufferedInput.close();
+                        outputStream.close();
+                        bufferedOutput.close();
+                        printWriter.close();
+                        socketConnection.close();
+                        return;
                     }
+                    System.out.println(st);
+                    st = st.replace(",", "");
+                    String[] parameters = st.split(" ");
+                    int len = parameters.length;
+                    String date = parameters[len - 2].replace("-", "");
+
+                    String passenger_names = "";
+                    String passenger_genders = "";
+                    String passenger_ages = "";
+                    int num_passenger = Integer.parseInt(parameters[0]);
+                    for (int i = 1; i <= num_passenger; i++) {
+                        if (i != num_passenger) {
+                            passenger_names += parameters[i] + ",";
+                            passenger_ages += parameters[i + num_passenger] + ",";
+                            passenger_genders += parameters[i + 2 * num_passenger] + ",";
+                        } else {
+                            passenger_names += parameters[i];
+                            passenger_ages += parameters[i + num_passenger];
+                            passenger_genders += parameters[i + 2 * num_passenger];
+                        }
+                    }
+
+                    // TODO: add stored procedure
+                    // TODO: create functions
+                    String query = "insert into bookingq_" + date + "_" + parameters[len - 3]
+                            + " (date, train_id, num_passenger,pref,names,ages, genders) values ('" + date + "','"
+                            + parameters[len - 3] + "'," + parameters[0] + ",'" + (parameters[len - 1]).toLowerCase()
+                            + "',"
+                            + "'" + passenger_names + "'"
+                            + "," + "'" + passenger_ages + "'" + "," + "'" + passenger_genders + "'" + ")";
+
+                    // System.out.println(query);
+                    getResultSet(conn, query, 1);
+
+                    responseQuery = "******* Dummy result ******";
+
+                    // ----------------------------------------------------------------
+
+                    // Sending data back to the client
+                    printWriter.println(responseQuery);
+                    // System.out.println("\nSent results to client - "
+                    // + socketConnection.getRemoteSocketAddress().toString() );
+                    conn.commit();
+                    conn.setAutoCommit(true);
+
+                } catch (SQLException e) {
+                    System.out.println("Client Disconnected");
+                    try {
+                        conn.rollback();
+                    } catch (SQLException e1) {
+                        e1.printStackTrace();
+                        break;
+                    }
+                    break;
                 }
-
-                // TODO: add stored procedure
-                // TODO: create functions
-                String query = "insert into bookingq_" + date + "_" + parameters[len - 3]
-                        + " (date, train_id, num_passenger,pref,names,ages, genders) values ('" + date + "','"
-                        + parameters[len - 3] + "'," + parameters[0] + ",'" + (parameters[len - 1]).toLowerCase() + "',"
-                        + "'" + passenger_names + "'"
-                        + "," + "'" + passenger_ages + "'" + "," + "'" + passenger_genders + "'" + ")";
-
-                // System.out.println(query);
-                getResultSet(conn, query, 1);
-                // -------------- your DB code goes here----------------------------
-                // try
-                // {
-                // // Thread.sleep(6000);
-                // }
-                // catch (InterruptedException e)
-                // {
-                // e.printStackTrace();
-                // }
-
-                responseQuery = "******* Dummy result ******";
-
-                // ----------------------------------------------------------------
-
-                // Sending data back to the client
-                printWriter.println(responseQuery);
-                // System.out.println("\nSent results to client - "
-                // + socketConnection.getRemoteSocketAddress().toString() );
 
             }
         } catch (IOException e) {
