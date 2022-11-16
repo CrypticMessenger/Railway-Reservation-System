@@ -94,29 +94,30 @@ class QueryRunner implements Runnable {
                     String date = parameters[len - 2].replace("-", "");
 
                     String passenger_names = "";
-                    String passenger_genders = "";
-                    String passenger_ages = "";
+                    // String passenger_genders = "";
+                    // String passenger_ages = "";
                     int num_passenger = Integer.parseInt(parameters[0]);
                     for (int i = 1; i <= num_passenger; i++) {
                         if (i != num_passenger) {
                             passenger_names += parameters[i] + ",";
-                            passenger_ages += parameters[i + num_passenger] + ",";
-                            passenger_genders += parameters[i + 2 * num_passenger] + ",";
+                            // passenger_ages += parameters[i + num_passenger] + ",";
+                            // passenger_genders += parameters[i + 2 * num_passenger] + ",";
                         } else {
                             passenger_names += parameters[i];
-                            passenger_ages += parameters[i + num_passenger];
-                            passenger_genders += parameters[i + 2 * num_passenger];
+                            // passenger_ages += parameters[i + num_passenger];
+                            // passenger_genders += parameters[i + 2 * num_passenger];
                         }
                     }
 
                     // TODO: add stored procedure
                     // TODO: create functions
                     String query = "insert into bookingq_" + date + "_" + parameters[len - 3]
-                            + " (date, train_id, num_passenger,pref,names,ages, genders) values ('" + date + "','"
+                            + " (date, train_id, num_passenger,pref,names) values ('" + date + "','"
                             + parameters[len - 3] + "'," + parameters[0] + ",'" + (parameters[len - 1]).toLowerCase()
                             + "',"
-                            + "'" + passenger_names + "'"
-                            + "," + "'" + passenger_ages + "'" + "," + "'" + passenger_genders + "'" + ")";
+                            + "'" + passenger_names + "')";
+                    // + "," + "'" + passenger_ages + "'" + "," + "'" + passenger_genders + "'" +
+                    // ")";
 
                     // System.out.println(query);
                     responseQuery = getResultSet(conn, query, 1);

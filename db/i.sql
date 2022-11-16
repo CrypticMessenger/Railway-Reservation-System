@@ -30,8 +30,6 @@ declare
  tickets varchar(255);
  ticket varchar(255);
  temp_name varchar(255);
- temp_age varchar(255);
- temp_gender varchar(255);
  counter integer;
  berth_num integer;
  coach_num integer;
@@ -87,8 +85,6 @@ BEGIN
         || quote_ident(ticket)
         || ' (
           name varchar(255),
-          age varchar(255),
-          gender varchar(255),
           pref varchar(255),
           type varchar(255),
           coach_num integer,
@@ -118,22 +114,17 @@ BEGIN
               coach_num := (starting_seat_num+counter)/18+1;
 
               temp_name := split_part(new.names,',',counter+1);
-              temp_age := split_part(new.ages,',',counter+1);
-              temp_gender := split_part(new.genders,',',counter+1);
+
               EXECUTE 'insert into '
               || quote_ident(ticket)
               || ' (
                 name ,
-                age ,
-                gender ,
                 pref ,
                 type ,
                 coach_num ,
                 berth_num 
               ) values ('
               || quote_literal(temp_name) || ','
-              || quote_literal(temp_age) || ','
-              || quote_literal(temp_gender) || ','
               || quote_literal(temp_pref) || ','
               || quote_literal(temp_type) || ','
               || quote_literal(coach_num) || ','
@@ -203,8 +194,6 @@ BEGIN
       || quote_ident(ticket)
       || ' (
         name varchar(255),
-        age varchar(255),
-        gender varchar(255),
         pref varchar(255),
         type varchar(255),
         coach_num integer,
@@ -238,22 +227,16 @@ BEGIN
         coach_num := (starting_seat_num+counter)/24+1+temp_row.num_ac;
 
         temp_name := split_part(new.names,',',counter+1);
-        temp_age := split_part(new.ages,',',counter+1);
-        temp_gender := split_part(new.genders,',',counter+1);
         EXECUTE 'insert into '
         || quote_ident(ticket)
         || ' (
           name ,
-          age ,
-          gender ,
           pref ,
           type ,
           coach_num ,
           berth_num 
         ) values ('
         || quote_literal(temp_name) || ','
-        || quote_literal(temp_age) || ','
-        || quote_literal(temp_gender) || ','
         || quote_literal(temp_pref) || ','
         || quote_literal(temp_type) || ','
         || quote_literal(coach_num) || ','
@@ -367,8 +350,6 @@ BEGIN
       num_passenger integer,
       pref varchar(255),
       names text,
-      ages text,
-      genders text,
       primary key (req_id)
     )';
 
