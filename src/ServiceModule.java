@@ -10,7 +10,6 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.net.Socket;
 import java.sql.Connection;
-import java.util.StringTokenizer;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -35,7 +34,7 @@ class QueryRunner implements Runnable {
             // 1 : request
             Statement stmt = conn.createStatement();
             // ResultSet rs = stmt.executeQuery(query);
-            int rs = stmt.executeUpdate(query);
+            stmt.executeUpdate(query);
             if (type == 1) {
                 return ("Ticket Booked successfully!");
             }
@@ -61,7 +60,7 @@ class QueryRunner implements Runnable {
 
             String st = "";
             String responseQuery = "";
-            String queryInput = "";
+            // String queryInput = "";
 
             while (true) {
                 try {
@@ -197,5 +196,6 @@ public class ServiceModule {
             // Submit task for execution
             executorService.submit(runnableTask);
         }
+
     }
 }

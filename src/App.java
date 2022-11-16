@@ -5,8 +5,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.sql.Connection;
 import java.sql.Statement;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
@@ -31,7 +29,7 @@ public class App {
             // 1 : request
             Statement stmt = conn.createStatement();
             // ResultSet rs = stmt.executeQuery(query);
-            int rs = stmt.executeUpdate(query);
+            stmt.executeUpdate(query);
             if (type == 1) {
                 System.out.println("Ticket Booked successfully!");
             }
