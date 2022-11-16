@@ -83,7 +83,7 @@ public class client {
 
         executorService.shutdown();
         try {
-            if (!executorService.awaitTermination(900, TimeUnit.MILLISECONDS)) {
+            if (!executorService.awaitTermination(10000, TimeUnit.MILLISECONDS)) {
                 executorService.shutdownNow();
             }
         } catch (InterruptedException e) {

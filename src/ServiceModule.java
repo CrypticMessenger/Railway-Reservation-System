@@ -65,11 +65,13 @@ class QueryRunner implements Runnable {
 
             while (true) {
                 try {
-                    conn.setAutoCommit(false);
+                    conn.setAutoCommit(true);
                     conn.setTransactionIsolation(8); // serilizable
                 } catch (SQLException e2) {
+                    // ! changes here
+
                     e2.printStackTrace();
-                    break;
+                    continue;
                 }
                 // Read client query
                 try {
@@ -133,13 +135,14 @@ class QueryRunner implements Runnable {
 
                 } catch (SQLException e) {
                     System.out.println("Client Disconnected");
-                    try {
-                        conn.rollback();
-                    } catch (SQLException e1) {
-                        e1.printStackTrace();
-                        break;
-                    }
-                    break;
+                    // try {
+                    // conn.rollback();
+                    // } catch (SQLException e1) {
+                    // e1.printStackTrace();
+                    // }
+
+                    // ! changes here
+                    continue;
                 }
 
             }
