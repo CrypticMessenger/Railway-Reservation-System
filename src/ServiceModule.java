@@ -131,7 +131,7 @@ class QueryRunner implements Runnable {
                     // System.out.println("\nSent results to client - "
                     // + socketConnection.getRemoteSocketAddress().toString() );
                     conn.commit();
-                    conn.setAutoCommit(true);
+                    // conn.setAutoCommit(true);
 
                 } catch (SQLException e) {
                     System.out.println("Client Disconnected");
