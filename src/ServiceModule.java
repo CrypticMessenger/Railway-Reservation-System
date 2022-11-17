@@ -160,7 +160,7 @@ public class ServiceModule {
     static int numServerCores = 2;
     private final String url = "jdbc:postgresql://localhost/railway_reservation_system";
     private final String user = "postgres";
-    private final String password = "1421";
+    private final String password = "iitropar";
 
     public Connection connect() {
         Connection conn = null;

@@ -11,7 +11,7 @@ import java.sql.SQLException;
 public class App {
     private final String url = "jdbc:postgresql://localhost/railway_reservation_system";
     private final String user = "postgres";
-    private final String password = "1421";
+    private final String password = "iitropar";
 
     public Connection connect() {
         Connection conn = null;
@@ -59,7 +59,8 @@ public class App {
 
     public static void main(String[] args) throws Exception {
         App app = new App();
-
+        String path = new File("").getAbsolutePath();
+        System.out.println(path);
         Connection conn = app.connect();
 
         File file = new File(
