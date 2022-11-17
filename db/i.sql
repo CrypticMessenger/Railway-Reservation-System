@@ -27,8 +27,8 @@ declare
  starting_seat_num integer;
  temp_row record;
  PNR varchar(255);
- tickets varchar(255);
- ticket varchar(255);
+--  tickets varchar(255);
+--  ticket varchar(255);
  temp_name varchar(255);
  counter integer;
  berth_num integer;
@@ -43,7 +43,7 @@ BEGIN
   temp_pref := new.pref; 
   temp_num_passenger := new.num_passenger; 
   temp1:= CONCAT('t_',temp_date,'_',temp_train_id);
-  tickets := CONCAT('pnrs_',temp_date,'_',temp_train_id);
+  -- tickets := CONCAT('pnrs_',temp_date,'_',temp_train_id);
   
  
 
@@ -55,95 +55,95 @@ BEGIN
   if temp_pref = 'ac' then
     if ( temp_num_passenger + temp_row.filled_ac_count <= 18*temp_row.num_ac) then
         starting_seat_num := temp_row.filled_ac_count;
-        PNR:= CONCAT(temp_date,temp_train_id,starting_seat_num,'0');
-        ticket := CONCAT('passenger_',PNR);
-        EXECUTE 'create table if not exists '
-        || quote_ident(tickets)
-        || ' (
-          pnr varchar(255),
-          date varchar(255),
-          train_id varchar(255),
-          num_passenger integer,
-          primary key (pnr)
-        )';
-        EXECUTE 'insert into '
-        || quote_ident(tickets)
-        || '(
-          pnr,
-          date,
-          train_id,
-          num_passenger
-        ) values ('
-        || quote_literal(PNR) || ','
-        || quote_literal(temp_date) || ','
-        || quote_literal(temp_train_id) || ','
-        || quote_literal(temp_num_passenger) || ')'
-        ;
+        -- PNR:= CONCAT(temp_date,temp_train_id,starting_seat_num,'0');
+        -- ticket := CONCAT('passenger_',PNR);
+        -- EXECUTE 'create table if not exists '
+        -- || quote_ident(tickets)
+        -- || ' (
+        --   pnr varchar(255),
+        --   date varchar(255),
+        --   train_id varchar(255),
+        --   num_passenger integer,
+        --   primary key (pnr)
+        -- )';
+        -- EXECUTE 'insert into '
+        -- || quote_ident(tickets)
+        -- || '(
+        --   pnr,
+        --   date,
+        --   train_id,
+        --   num_passenger
+        -- ) values ('
+        -- || quote_literal(PNR) || ','
+        -- || quote_literal(temp_date) || ','
+        -- || quote_literal(temp_train_id) || ','
+        -- || quote_literal(temp_num_passenger) || ')'
+        -- ;
 
 
-        EXECUTE 'create table if not exists '
-        || quote_ident(ticket)
-        || ' (
-          name varchar(255),
-          pref varchar(255),
-          type varchar(255),
-          coach_num integer,
-          berth_num integer,
-          primary key (coach_num,berth_num)
-        )';
+        -- EXECUTE 'create table if not exists '
+        -- || quote_ident(ticket)
+        -- || ' (
+        --   name varchar(255),
+        --   pref varchar(255),
+        --   type varchar(255),
+        --   coach_num integer,
+        --   berth_num integer,
+        --   primary key (coach_num,berth_num)
+        -- )';
 
         
          
-            counter := 0;
+            -- counter := 0;
         
-            while counter <temp_num_passenger loop
-              berth_num := (starting_seat_num+counter)%18+1;
-              if(berth_num%6=0) then
-                temp_type := 'SU';
-              elsif (berth_num%6=1) then
-                temp_type := 'LB';
-              elsif (berth_num%6=2) then
-                temp_type := 'LB';
-              elsif (berth_num%6=3) then
-                temp_type := 'UB';
-              elsif (berth_num%6=4) then
-                temp_type := 'UB';
-              elsif (berth_num%6=5) then
-                temp_type := 'SL';
-              end if;
-              coach_num := (starting_seat_num+counter)/18+1;
+            -- while counter <temp_num_passenger loop
+            --   berth_num := (starting_seat_num+counter)%18+1;
+            --   if(berth_num%6=0) then
+            --     temp_type := 'SU';
+            --   elsif (berth_num%6=1) then
+            --     temp_type := 'LB';
+            --   elsif (berth_num%6=2) then
+            --     temp_type := 'LB';
+            --   elsif (berth_num%6=3) then
+            --     temp_type := 'UB';
+            --   elsif (berth_num%6=4) then
+            --     temp_type := 'UB';
+            --   elsif (berth_num%6=5) then
+            --     temp_type := 'SL';
+            --   end if;
+            --   coach_num := (starting_seat_num+counter)/18+1;
 
-              temp_name := split_part(new.names,',',counter+1);
+            --   temp_name := split_part(new.names,',',counter+1);
 
-              EXECUTE 'insert into '
-              || quote_ident(ticket)
-              || ' (
-                name ,
-                pref ,
-                type ,
-                coach_num ,
-                berth_num 
-              ) values ('
-              || quote_literal(temp_name) || ','
-              || quote_literal(temp_pref) || ','
-              || quote_literal(temp_type) || ','
-              || quote_literal(coach_num) || ','
-              || quote_literal(berth_num) || ')'
-              ;
+            --   EXECUTE 'insert into '
+            --   || quote_ident(ticket)
+            --   || ' (
+            --     name ,
+            --     pref ,
+            --     type ,
+            --     coach_num ,
+            --     berth_num 
+            --   ) values ('
+            --   || quote_literal(temp_name) || ','
+            --   || quote_literal(temp_pref) || ','
+            --   || quote_literal(temp_type) || ','
+            --   || quote_literal(coach_num) || ','
+            --   || quote_literal(berth_num) || ')'
+            --   ;
 
-              counter := counter+1;
-            end loop;
+            --   counter := counter+1;
+            -- end loop;
 
        
-        EXECUTE 'select * from '
-        || quote_ident(tickets) 
-        || ' where pnr = '
-        || quote_literal(PNR)
-        ;
+        -- EXECUTE 'select * from '
+        -- || quote_ident(tickets) 
+        -- || ' where pnr = '
+        -- || quote_literal(PNR)
+        -- ;
 
-        EXECUTE 'select * from '
-        || quote_ident(ticket) 
-        ;
+        -- EXECUTE 'select * from '
+        -- || quote_ident(ticket) 
+        -- ;
 
 
 
@@ -165,99 +165,87 @@ BEGIN
     if ( temp_num_passenger + temp_row.filled_slr_count <= 24*temp_row.num_slr) then
       starting_seat_num := temp_row.filled_slr_count ;
       PNR:= CONCAT(temp_date,temp_train_id,starting_seat_num,'1');
-      ticket := CONCAT('passenger_',PNR);
-      EXECUTE 'create table if not exists '
-      || quote_ident(tickets)
-      || ' (
-        pnr varchar(255),
-        date varchar(255),
-        train_id varchar(255),
-        num_passenger integer,
-        primary key (pnr)
-      )';
-      EXECUTE 'insert into '
-      || quote_ident(tickets)
-      || '(
-        pnr,
-        date,
-        train_id,
-        num_passenger
-      ) values ('
-      || quote_literal(PNR) || ','
-      || quote_literal(temp_date) || ','
-      || quote_literal(temp_train_id) || ','
-      || quote_literal(temp_num_passenger) || ')'
-      ;
+      -- ticket := CONCAT('passenger_',PNR);
+      -- EXECUTE 'create table if not exists '
+      -- || quote_ident(tickets)
+      -- || ' (
+      --   pnr varchar(255),
+      --   date varchar(255),
+      --   train_id varchar(255),
+      --   num_passenger integer,
+      --   primary key (pnr)
+      -- )';
+      -- EXECUTE 'insert into '
+      -- || quote_ident(tickets)
+      -- || '(
+      --   pnr,
+      --   date,
+      --   train_id,
+      --   num_passenger
+      -- ) values ('
+      -- || quote_literal(PNR) || ','
+      -- || quote_literal(temp_date) || ','
+      -- || quote_literal(temp_train_id) || ','
+      -- || quote_literal(temp_num_passenger) || ')'
+      -- ;
 
 
-      EXECUTE 'create table if not exists '
-      || quote_ident(ticket)
-      || ' (
-        name varchar(255),
-        pref varchar(255),
-        type varchar(255),
-        coach_num integer,
-        berth_num integer,
-        primary key (coach_num,berth_num)
-      )';
+      -- EXECUTE 'create table if not exists '
+      -- || quote_ident(ticket)
+      -- || ' (
+      --   name varchar(255),
+      --   pref varchar(255),
+      --   type varchar(255),
+      --   coach_num integer,
+      --   berth_num integer,
+      --   primary key (coach_num,berth_num)
+      -- )';
 
       
         
-      counter := 0;
+      -- counter := 0;
   
-      while counter <temp_num_passenger loop
-        berth_num := (starting_seat_num+counter)%24+1;
-        if(berth_num%8=0) then
-          temp_type := 'SU';
-        elsif (berth_num%8=1) then
-          temp_type := 'LB';
-        elsif (berth_num%8=2) then
-          temp_type := 'MB';
-        elsif (berth_num%8=3) then
-          temp_type := 'UB';
-        elsif (berth_num%8=4) then
-          temp_type := 'LB';
-        elsif (berth_num%8=5) then
-          temp_type := 'MB';
-        elsif (berth_num%8=6) then
-          temp_type := 'UB';
-        elsif (berth_num%8=7) then
-          temp_type := 'SL';
-        end if;
-        coach_num := (starting_seat_num+counter)/24+1+temp_row.num_ac;
+      -- while counter <temp_num_passenger loop
+      --   berth_num := (starting_seat_num+counter)%24+1;
+      --   if(berth_num%8=0) then
+      --     temp_type := 'SU';
+      --   elsif (berth_num%8=1) then
+      --     temp_type := 'LB';
+      --   elsif (berth_num%8=2) then
+      --     temp_type := 'MB';
+      --   elsif (berth_num%8=3) then
+      --     temp_type := 'UB';
+      --   elsif (berth_num%8=4) then
+      --     temp_type := 'LB';
+      --   elsif (berth_num%8=5) then
+      --     temp_type := 'MB';
+      --   elsif (berth_num%8=6) then
+      --     temp_type := 'UB';
+      --   elsif (berth_num%8=7) then
+      --     temp_type := 'SL';
+      --   end if;
+      --   coach_num := (starting_seat_num+counter)/24+1+temp_row.num_ac;
 
-        temp_name := split_part(new.names,',',counter+1);
-        EXECUTE 'insert into '
-        || quote_ident(ticket)
-        || ' (
-          name ,
-          pref ,
-          type ,
-          coach_num ,
-          berth_num 
-        ) values ('
-        || quote_literal(temp_name) || ','
-        || quote_literal(temp_pref) || ','
-        || quote_literal(temp_type) || ','
-        || quote_literal(coach_num) || ','
-        || quote_literal(berth_num) || ')'
-        ;
+      --   temp_name := split_part(new.names,',',counter+1);
+      --   EXECUTE 'insert into '
+      --   || quote_ident(ticket)
+      --   || ' (
+      --     name ,
+      --     pref ,
+      --     type ,
+      --     coach_num ,
+      --     berth_num 
+      --   ) values ('
+      --   || quote_literal(temp_name) || ','
+      --   || quote_literal(temp_pref) || ','
+      --   || quote_literal(temp_type) || ','
+      --   || quote_literal(coach_num) || ','
+      --   || quote_literal(berth_num) || ')'
+      --   ;
 
-        counter := counter+1;
-      end loop;
+      --   counter := counter+1;
+      -- end loop;
         
-
-
-
-
-
-
-
-
-
-
-
-
       EXECUTE 'Update  '
         || quote_ident(temp1)
         || ' set filled_slr_count = '  
