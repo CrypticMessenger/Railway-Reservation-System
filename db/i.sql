@@ -34,6 +34,7 @@ declare
  berth_num integer;
  coach_num integer;
  temp_type varchar(255);
+ temp4 varchar(255);
  
 
 BEGIN
@@ -43,6 +44,7 @@ BEGIN
   temp_pref := new.pref; 
   temp_num_passenger := new.num_passenger; 
   temp1:= CONCAT('t_',temp_date,'_',temp_train_id);
+  temp4 := CONCAT('successful_',temp_date,'_',temp_train_id);
   -- tickets := CONCAT('pnrs_',temp_date,'_',temp_train_id);
   
  
@@ -55,7 +57,7 @@ BEGIN
   if temp_pref = 'ac' then
     if ( temp_num_passenger + temp_row.filled_ac_count <= 18*temp_row.num_ac) then
         starting_seat_num := temp_row.filled_ac_count;
-        -- PNR:= CONCAT(temp_date,temp_train_id,starting_seat_num,'0');
+        PNR:= CONCAT(temp_date,temp_train_id,starting_seat_num,'0');
         -- ticket := CONCAT('passenger_',PNR);
         -- EXECUTE 'create table if not exists '
         -- || quote_ident(tickets)
@@ -134,6 +136,54 @@ BEGIN
             --   counter := counter+1;
             -- end loop;
 
+            counter := 0;
+        
+            while counter <temp_num_passenger loop
+              berth_num := (starting_seat_num+counter)%18+1;
+              if(berth_num%6=0) then
+                temp_type := 'SU';
+              elsif (berth_num%6=1) then
+                temp_type := 'LB';
+              elsif (berth_num%6=2) then
+                temp_type := 'LB';
+              elsif (berth_num%6=3) then
+                temp_type := 'UB';
+              elsif (berth_num%6=4) then
+                temp_type := 'UB';
+              elsif (berth_num%6=5) then
+                temp_type := 'SL';
+              end if;
+              coach_num := (starting_seat_num+counter)/18+1;
+
+              temp_name := split_part(new.names,',',counter+1);
+
+              EXECUTE 'insert into '
+              || quote_ident(temp4)
+              || ' (
+                  pnr ,
+                  date ,
+                  train_id ,
+                  num_passenger,
+                  pref ,
+                  name ,
+                  coach_num,
+                  berth_num,
+                  type
+              ) values ('
+              || quote_literal(PNR) || ','
+              || quote_literal(temp_date) || ','
+              || quote_literal(temp_train_id) || ','
+              || quote_literal(temp_num_passenger) || ','
+              || quote_literal(temp_pref) || ','
+              || quote_literal(temp_name) || ','
+              || quote_literal(coach_num) || ','
+              || quote_literal(berth_num) || ','
+              || quote_literal(temp_type) || ')'
+              ;
+
+              counter := counter+1;
+            end loop;
+
        
         -- EXECUTE 'select * from '
         -- || quote_ident(tickets) 
@@ -164,7 +214,7 @@ BEGIN
   else
     if ( temp_num_passenger + temp_row.filled_slr_count <= 24*temp_row.num_slr) then
       starting_seat_num := temp_row.filled_slr_count ;
-      -- PNR:= CONCAT(temp_date,temp_train_id,starting_seat_num,'1');
+      PNR:= CONCAT(temp_date,temp_train_id,starting_seat_num,'1');
       -- ticket := CONCAT('passenger_',PNR);
       -- EXECUTE 'create table if not exists '
       -- || quote_ident(tickets)
@@ -245,6 +295,56 @@ BEGIN
 
       --   counter := counter+1;
       -- end loop;
+      counter := 0;
+  
+      while counter <temp_num_passenger loop
+        berth_num := (starting_seat_num+counter)%24+1;
+        if(berth_num%8=0) then
+          temp_type := 'SU';
+        elsif (berth_num%8=1) then
+          temp_type := 'LB';
+        elsif (berth_num%8=2) then
+          temp_type := 'MB';
+        elsif (berth_num%8=3) then
+          temp_type := 'UB';
+        elsif (berth_num%8=4) then
+          temp_type := 'LB';
+        elsif (berth_num%8=5) then
+          temp_type := 'MB';
+        elsif (berth_num%8=6) then
+          temp_type := 'UB';
+        elsif (berth_num%8=7) then
+          temp_type := 'SL';
+        end if;
+        coach_num := (starting_seat_num+counter)/24+1+temp_row.num_ac;
+
+        temp_name := split_part(new.names,',',counter+1);
+          EXECUTE 'insert into '
+              || quote_ident(temp4)
+              || ' (
+                  pnr ,
+                  date ,
+                  train_id ,
+                  num_passenger,
+                  pref ,
+                  name ,
+                  coach_num,
+                  berth_num,
+                  type
+              ) values ('
+              || quote_literal(PNR) || ','
+              || quote_literal(temp_date) || ','
+              || quote_literal(temp_train_id) || ','
+              || quote_literal(temp_num_passenger) || ','
+              || quote_literal(temp_pref) || ','
+              || quote_literal(temp_name) || ','
+              || quote_literal(coach_num) || ','
+              || quote_literal(berth_num) || ','
+              || quote_literal(temp_type) || ')'
+              ;
+
+        counter := counter+1;
+      end loop;
         
       EXECUTE 'Update  '
         || quote_ident(temp1)
@@ -284,6 +384,7 @@ declare
   temp1 varchar(255);
   temp2 varchar(255);
   temp3 varchar(255);
+  temp4 varchar(255);
   
 BEGIN
   temp_train_id := new.train_id;
@@ -297,6 +398,8 @@ BEGIN
   temp2 := CONCAT('bookingq_',temp_date,'_',temp_train_id);
   -- raise exception '%',temp2;
   temp3 := CONCAT('seats_avail_check_',temp_date,'_',temp_train_id);
+  temp4 := CONCAT('successful_',temp_date,'_',temp_train_id);
+  
   EXECUTE 'create table if not exists '
     || quote_ident(temp1)
     || ' (
@@ -343,6 +446,21 @@ BEGIN
       primary key (req_id)
     )';
 
+    EXECUTE 'create table if not exists '
+    || quote_ident(temp4)
+    || ' (
+      req_id SERIAL,
+      pnr varchar(255),
+      date varchar(255),
+      train_id varchar(255),
+      num_passenger integer,
+      pref varchar(255),
+      name varchar(255),
+      coach_num integer,
+      berth_num integer,
+      type varchar(255),
+      primary key (req_id)
+    )';
 
 
 
