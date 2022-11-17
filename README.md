@@ -19,5 +19,5 @@ The `JAVA PROJECTS` view allows you to manage your dependencies. More details ca
 
 - [x] correct input format (slr,and ages and genders)
 - [x] multilevel threading support
-- [ ] 3 team member extention
+- [x] 3 team member extention
 - [ ] testing
