@@ -64,8 +64,8 @@ class QueryRunner implements Runnable {
 
             while (true) {
                 try {
-                    conn.setAutoCommit(true);
                     conn.setTransactionIsolation(8); // serilizable
+                    conn.setAutoCommit(false);
                 } catch (SQLException e2) {
                     // ! changes here
 
@@ -116,6 +116,7 @@ class QueryRunner implements Runnable {
                             + parameters[len - 3] + "'," + parameters[0] + ",'" + (parameters[len - 1]).toLowerCase()
                             + "',"
                             + "'" + passenger_names + "')";
+
                     // + "," + "'" + passenger_ages + "'" + "," + "'" + passenger_genders + "'" +
                     // ")";
 
@@ -131,9 +132,9 @@ class QueryRunner implements Runnable {
                     // System.out.println("\nSent results to client - "
                     // + socketConnection.getRemoteSocketAddress().toString() );
                     conn.commit();
-                    // conn.setAutoCommit(true);
 
                 } catch (SQLException e) {
+
                     System.out.println("Client Disconnected");
                     // try {
                     // conn.rollback();
@@ -160,7 +161,8 @@ public class ServiceModule {
     static int numServerCores = 2;
     private final String url = "jdbc:postgresql://localhost/railway_reservation_system";
     private final String user = "postgres";
-    private final String password = "iitropar";
+    private final String password = "1421";
+    // private final String password = "iitropar";
 
     public Connection connect() {
         Connection conn = null;

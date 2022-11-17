@@ -11,7 +11,8 @@ import java.sql.SQLException;
 public class App {
     private final String url = "jdbc:postgresql://localhost/railway_reservation_system";
     private final String user = "postgres";
-    private final String password = "iitropar";
+    // private final String password = "iitropar";
+    private final String password = "1421";
 
     public Connection connect() {
         Connection conn = null;
@@ -72,8 +73,8 @@ public class App {
 
             String[] parameters = st.split(" ");
             String date = parameters[1].replace("-", "");
-            String query = "insert into date_train_records (date,train_id,num_ac,num_slr) values (" + date + ","
-                    + parameters[0] + "," + parameters[2] + "," + parameters[3] + ")";
+            String query = "insert into date_train_records (date,train_id,num_ac,num_slr) values ('" + date + "','"
+                    + parameters[0] + "','" + parameters[2] + "','" + parameters[3] + "')";
 
             app.getResultSet(conn, query, 0);
         }
