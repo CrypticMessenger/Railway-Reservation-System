@@ -27,8 +27,8 @@ declare
  starting_seat_num integer;
  temp_row record;
  PNR varchar(255);
- tickets varchar(255);
- ticket varchar(255);
+--  tickets varchar(255);
+--  ticket varchar(255);
  temp_name varchar(255);
  counter integer;
  berth_num integer;
@@ -115,6 +115,7 @@ BEGIN
 
             --   temp_name := split_part(new.names,',',counter+1);
 
+<<<<<<< HEAD
             --   -- EXECUTE 'insert into '
             --   -- || quote_ident(ticket)
             --   -- || ' (
@@ -130,6 +131,23 @@ BEGIN
             --   -- || quote_literal(coach_num) || ','
             --   -- || quote_literal(berth_num) || ')'
             --   -- ;
+=======
+            --   EXECUTE 'insert into '
+            --   || quote_ident(ticket)
+            --   || ' (
+            --     name ,
+            --     pref ,
+            --     type ,
+            --     coach_num ,
+            --     berth_num 
+            --   ) values ('
+            --   || quote_literal(temp_name) || ','
+            --   || quote_literal(temp_pref) || ','
+            --   || quote_literal(temp_type) || ','
+            --   || quote_literal(coach_num) || ','
+            --   || quote_literal(berth_num) || ')'
+            --   ;
+>>>>>>> d85c41666bc8cd95d260e8d16f8043edd64c30ca
 
             --   counter := counter+1;
             -- end loop;
@@ -164,7 +182,11 @@ BEGIN
   else
     if ( temp_num_passenger + temp_row.filled_slr_count <= 24*temp_row.num_slr) then
       starting_seat_num := temp_row.filled_slr_count ;
+<<<<<<< HEAD
       -- PNR:= CONCAT(temp_date,temp_train_id,starting_seat_num,'1');
+=======
+      PNR:= CONCAT(temp_date,temp_train_id,starting_seat_num,'1');
+>>>>>>> d85c41666bc8cd95d260e8d16f8043edd64c30ca
       -- ticket := CONCAT('passenger_',PNR);
       -- EXECUTE 'create table if not exists '
       -- || quote_ident(tickets)
@@ -227,6 +249,7 @@ BEGIN
       --   coach_num := (starting_seat_num+counter)/24+1+temp_row.num_ac;
 
       --   temp_name := split_part(new.names,',',counter+1);
+<<<<<<< HEAD
         -- EXECUTE 'insert into '
         -- || quote_ident(ticket)
         -- || ' (
@@ -244,20 +267,27 @@ BEGIN
         -- ;
 
         -- counter := counter+1;
+=======
+      --   EXECUTE 'insert into '
+      --   || quote_ident(ticket)
+      --   || ' (
+      --     name ,
+      --     pref ,
+      --     type ,
+      --     coach_num ,
+      --     berth_num 
+      --   ) values ('
+      --   || quote_literal(temp_name) || ','
+      --   || quote_literal(temp_pref) || ','
+      --   || quote_literal(temp_type) || ','
+      --   || quote_literal(coach_num) || ','
+      --   || quote_literal(berth_num) || ')'
+      --   ;
+
+      --   counter := counter+1;
+>>>>>>> d85c41666bc8cd95d260e8d16f8043edd64c30ca
       -- end loop;
         
-
-
-
-
-
-
-
-
-
-
-
-
       EXECUTE 'Update  '
         || quote_ident(temp1)
         || ' set filled_slr_count = '  
