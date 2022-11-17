@@ -23,8 +23,12 @@ class sendQuery implements Runnable {
             Socket socketConnection = new Socket("localhost", sockPort);
             // String add1 = "/home/course2/Reservation-System-Project/client/";
             // String add2 = "/home/course2/Reservation-System-Project/response/";
-            String add1 = "D:\\Desktop\\Multi-Thread_sample\\Multi-Thread_sample\\testSubject\\Experiment3\\Reservation-System-Project\\client\\";
+            String add1 = "D:\\Desktop\\Multi-Thread_sample\\Multi-Thread_sample\\testSubject\\Experiment3\\Reservation-System-Project\\tests\\testset\\Large Group\\";
             String add2 = "D:\\Desktop\\Multi-Thread_sample\\Multi-Thread_sample\\testSubject\\Experiment3\\Reservation-System-Project\\response\\";
+            // String add1 =
+            // "D:\\Desktop\\Multi-Thread_sample\\Multi-Thread_sample\\testSubject\\Experiment3\\Reservation-System-Project\\client\\";
+            // String add2 =
+            // "D:\\Desktop\\Multi-Thread_sample\\Multi-Thread_sample\\testSubject\\Experiment3\\Reservation-System-Project\\response\\";
             // Files for input queries and responses
             String inputfile = Thread.currentThread().getName() + "_input.txt";
 

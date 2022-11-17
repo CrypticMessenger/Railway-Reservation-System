@@ -65,7 +65,7 @@ public class App {
         Connection conn = app.connect();
 
         File file = new File(
-                "D:\\Desktop\\Multi-Thread_sample\\Multi-Thread_sample\\testSubject\\Experiment1\\client\\admin.txt");
+                "D:\\Desktop\\Multi-Thread_sample\\Multi-Thread_sample\\testSubject\\Experiment3\\Reservation-System-Project\\client\\admin.txt");
         BufferedReader br = new BufferedReader(new FileReader(file));
         String st;
         while ((st = br.readLine()) != null && !(st.equals("#"))) {

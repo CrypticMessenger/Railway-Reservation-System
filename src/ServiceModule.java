@@ -63,17 +63,16 @@ class QueryRunner implements Runnable {
             // String queryInput = "";
 
             while (true) {
-                try {
-                    conn.setTransactionIsolation(8); // serilizable
-                    conn.setAutoCommit(false);
-                } catch (SQLException e2) {
-                    // ! changes here
+                // try {
+                // } catch (SQLException e2) {
+                // // ! changes here
 
-                    e2.printStackTrace();
-                    continue;
-                }
+                // e2.printStackTrace();
+                // continue;
+                // }
                 // Read client query
                 try {
+                    conn.setTransactionIsolation(8);
                     st = bufferedInput.readLine();
                     if (st.equals("#")) {
                         String returnMsg = "Connection Terminated - client : "
@@ -87,7 +86,7 @@ class QueryRunner implements Runnable {
                         socketConnection.close();
                         return;
                     }
-                    System.out.println(st);
+                    // System.out.println(st);
                     st = st.replace(",", "");
                     String[] parameters = st.split(" ");
                     int len = parameters.length;
@@ -131,7 +130,7 @@ class QueryRunner implements Runnable {
                     printWriter.println(responseQuery);
                     // System.out.println("\nSent results to client - "
                     // + socketConnection.getRemoteSocketAddress().toString() );
-                    conn.commit();
+                    // conn.commit();
 
                 } catch (SQLException e) {
 
@@ -147,7 +146,9 @@ class QueryRunner implements Runnable {
                 }
 
             }
-        } catch (IOException e) {
+        } catch (
+
+        IOException e) {
             return;
         }
     }
