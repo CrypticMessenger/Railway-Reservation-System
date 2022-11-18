@@ -8,11 +8,6 @@ create table date_train_records(
     primary key (date,train_id)
 );
 
-
-
-
-
--- ! changes
 CREATE OR REPLACE FUNCTION check_avail_pro()
   RETURNS TRIGGER 
   LANGUAGE PLPGSQL
@@ -38,7 +33,6 @@ declare
  
 
 BEGIN
-  -- ! refractor the var names
   temp_date := new.date; 
   temp_train_id := new.train_id; 
   temp_pref := new.pref; 
@@ -47,13 +41,10 @@ BEGIN
   temp4 := CONCAT('successful_',temp_date,'_',temp_train_id);
   -- tickets := CONCAT('pnrs_',temp_date,'_',temp_train_id);
   
- 
-
   EXECUTE 'SELECT * from '
   || quote_ident(temp1)
   INTO temp_row;
 
-  -- ! error handling
   if temp_pref = 'ac' then
     if ( temp_num_passenger + temp_row.filled_ac_count <= 18*temp_row.num_ac) then
         starting_seat_num := temp_row.filled_ac_count;
@@ -82,7 +73,6 @@ BEGIN
         -- || quote_literal(temp_num_passenger) || ')'
         -- ;
 
-
         -- EXECUTE 'create table if not exists '
         -- || quote_ident(ticket)
         -- || ' (
@@ -94,8 +84,6 @@ BEGIN
         --   primary key (coach_num,berth_num)
         -- )';
 
-        
-         
             -- counter := 0;
         
             -- while counter <temp_num_passenger loop
@@ -180,11 +168,9 @@ BEGIN
               || quote_literal(berth_num) || ','
               || quote_literal(temp_type) || ')'
               ;
-
               counter := counter+1;
             end loop;
 
-       
         -- EXECUTE 'select * from '
         -- || quote_ident(tickets) 
         -- || ' where pnr = '
@@ -194,9 +180,6 @@ BEGIN
         -- EXECUTE 'select * from '
         -- || quote_ident(ticket) 
         -- ;
-
-
-
 
         EXECUTE 'Update  '
         || quote_ident(temp1)
@@ -208,8 +191,6 @@ BEGIN
     else 
       raise exception using message = 'SEATS UNAVAILABLE!!',errcode = 'P3333';
     end if;
-
-
 
   else
     if ( temp_num_passenger + temp_row.filled_slr_count <= 24*temp_row.num_slr) then
@@ -239,7 +220,6 @@ BEGIN
       -- || quote_literal(temp_num_passenger) || ')'
       -- ;
 
-
       -- EXECUTE 'create table if not exists '
       -- || quote_ident(ticket)
       -- || ' (
@@ -251,8 +231,6 @@ BEGIN
       --   primary key (coach_num,berth_num)
       -- )';
 
-      
-        
       -- counter := 0;
   
       -- while counter <temp_num_passenger loop
@@ -363,14 +341,6 @@ BEGIN
 END;
 $$;
 
-
-
-
-
-
-
-
-
 CREATE OR REPLACE FUNCTION make_train_table()
   RETURNS TRIGGER 
   LANGUAGE PLPGSQL
@@ -391,12 +361,8 @@ BEGIN
   temp_date := new.date;
   temp_num_ac := new.num_ac;
   temp_num_slr := new.num_slr;
-  -- raise notice '%',temp_train_id;
-
   temp1 := CONCAT('t_',temp_date,'_',temp_train_id); 
-  -- raise exception '%',temp1;
   temp2 := CONCAT('bookingq_',temp_date,'_',temp_train_id);
-  -- raise exception '%',temp2;
   temp3 := CONCAT('seats_avail_check_',temp_date,'_',temp_train_id);
   temp4 := CONCAT('successful_',temp_date,'_',temp_train_id);
   
@@ -462,15 +428,11 @@ BEGIN
       primary key (req_id)
     )';
 
-
-
     EXECUTE 'create trigger '  
     || quote_ident(temp3)
     ||' before insert on '
     || quote_ident(temp2)
     || ' for each row execute procedure check_avail_pro()';
-
-
 
 	RETURN NEW;
 END;
@@ -481,17 +443,3 @@ CREATE TRIGGER create_train_table
   ON date_train_records
   FOR EACH row
   EXECUTE PROCEDURE make_train_table();
-
-
-
--- ! by admin
--- ! date need to be parsed properly
-
-
-
-
-
--- insert into date_train_records (date, train_id,num_ac,num_slr) values ('11132002','12234',23,22);
--- insert into date_train_records (date, train_id,num_ac,num_slr) values ('13132002','02231',22,23);
--- insert into bookingq_11132002_12234 (date, train_id, num_passenger,pref,names,ages, genders) values ('11132002','12234',4,'ac','A,B,C,D','18,19,20,7','M,M,F,F');
--- insert into bookingq_11132002_12234 (date, train_id, num_passenger,pref,names,ages, genders) values ('11132002','12234',4,'ac','E,F,G,H','18,19,20,7','M,M,F,F');

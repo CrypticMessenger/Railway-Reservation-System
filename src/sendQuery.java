@@ -11,11 +11,6 @@ import java.net.Socket;
 
 class sendQuery implements Runnable {
     int sockPort = 7005;
-    // public sendQuery(int arg) // constructor to get arguments from the main
-    // thread
-    // {
-    // // arg from main thread
-    // }
 
     public void run() {
         try {
@@ -23,15 +18,10 @@ class sendQuery implements Runnable {
             Socket socketConnection = new Socket("localhost", sockPort);
             // String add1 = "/home/course2/Reservation-System-Project/client/";
             // String add2 = "/home/course2/Reservation-System-Project/response/";
-            // String add1 =
-            // "D:\\Desktop\\Multi-Thread_sample\\Multi-Thread_sample\\testSubject\\Experiment3\\Reservation-System-Project\\client\\";
+
             String add1 = "D:\\Desktop\\Multi-Thread_sample\\Multi-Thread_sample\\testSubject\\Experiment3\\Reservation-System-Project\\tests\\testset\\Large Group\\";
             String add2 = "D:\\Desktop\\Multi-Thread_sample\\Multi-Thread_sample\\testSubject\\Experiment3\\Reservation-System-Project\\response\\";
-            // String add1 =
-            // "D:\\Desktop\\Multi-Thread_sample\\Multi-Thread_sample\\testSubject\\Experiment3\\Reservation-System-Project\\client\\";
-            // String add2 =
-            // "D:\\Desktop\\Multi-Thread_sample\\Multi-Thread_sample\\testSubject\\Experiment3\\Reservation-System-Project\\response\\";
-            // Files for input queries and responses
+
             String inputfile = Thread.currentThread().getName() + "_input.txt";
 
             String outputfile = Thread.currentThread().getName() + "_output.txt";
@@ -57,13 +47,6 @@ class sendQuery implements Runnable {
                 printWriter.println(query);
             }
 
-            // Get query responses from the input end of the socket of client
-            // char c;
-            // while ((c = (char) bufferedInput.read()) != (char) -1) {
-            // // System.out.print(i);
-            // filewriter.write(c);
-            // }
-            // TODO: changes here
             String result;
             while ((result = bufferedInput.readLine()) != null) {
                 filewriter.write(result + "\n");

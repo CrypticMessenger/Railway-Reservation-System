@@ -10,18 +10,14 @@ public class client {
         /**************************/
         // Creating a thread pool
         ExecutorService executorService = Executors.newFixedThreadPool(firstLevelThreads);
-        // long start = System.currentTimeMillis();
-        // some time passes
+
         for (int i = 0; i < firstLevelThreads; i++) {
-            Runnable runnableTask = new invokeWorkers(); // Pass arg, if any to constructor sendQuery(arg)
+            Runnable runnableTask = new invokeWorkers();
             executorService.submit(runnableTask);
         }
-        // long end = System.currentTimeMillis();
-        // long elapsedTime = end - start;
-        // System.out.println("Time taken to execute all threads: " + elapsedTime);
 
         executorService.shutdown();
-        try { // Wait for 8 sec and then exit the executor service
+        try {
             if (!executorService.awaitTermination(10, TimeUnit.SECONDS)) {
                 executorService.shutdownNow();
             }

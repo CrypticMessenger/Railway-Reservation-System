@@ -16,7 +16,6 @@ import java.util.concurrent.Executors;
 class QueryRunner implements Runnable {
     // Declare socket for client access
     protected Socket socketConnection;
-    // Declare connection to database
 
     public Connection connect() {
         Connection conn = null;
@@ -35,28 +34,18 @@ class QueryRunner implements Runnable {
         this.socketConnection = clientSocket;
     }
 
-    // public QueryRunner(Socket clientSocket, Connection conn1) {
-    // this.socketConnection = clientSocket;
-    // this.conn = conn1;
-    // }
-
     public String getResultSet(Connection conn, String query, int type) {
         try {
-            // 1 : request
             Statement stmt = conn.createStatement();
-            // ResultSet rs = stmt.executeQuery(query);
             stmt.executeUpdate(query);
             if (type == 1) {
                 return ("Ticket Booked successfully!");
             }
 
         } catch (SQLException e) {
-            // System.out.println("error");
-            // System.out.println(e.getErrorCode());
-            // e.getErrorCode();
+
             String t = e.getMessage();
             if (t.charAt(7) == 'c') { //
-                // System.out.println(e.getMessage());
                 return "issue";
             }
 
@@ -79,20 +68,12 @@ class QueryRunner implements Runnable {
 
             String st = "";
             String responseQuery = "";
-            // String queryInput = "";
 
             try {
                 conn.setAutoCommit(true);
                 conn.setTransactionIsolation(8);
                 while (true) {
-                    // try {
-                    // } catch (SQLException e2) {
-                    // // ! changes here
 
-                    // e2.printStackTrace();
-                    // continue;
-                    // }
-                    // Read client query
                     st = bufferedInput.readLine();
                     if (st.equals("#")) {
                         String returnMsg = "Connection Terminated - client : "
@@ -107,66 +88,43 @@ class QueryRunner implements Runnable {
                         conn.close();
                         return;
                     }
-                    // System.out.println(st);
                     st = st.replace(",", "");
                     String[] parameters = st.split(" ");
                     int len = parameters.length;
                     String date = parameters[len - 2].replace("-", "");
 
                     String passenger_names = "";
-                    // String passenger_genders = "";
-                    // String passenger_ages = "";
+
                     int num_passenger = Integer.parseInt(parameters[0]);
                     for (int i = 1; i <= num_passenger; i++) {
                         if (i != num_passenger) {
                             passenger_names += parameters[i] + ",";
-                            // passenger_ages += parameters[i + num_passenger] + ",";
-                            // passenger_genders += parameters[i + 2 * num_passenger] + ",";
+
                         } else {
                             passenger_names += parameters[i];
-                            // passenger_ages += parameters[i + num_passenger];
-                            // passenger_genders += parameters[i + 2 * num_passenger];
+
                         }
                     }
 
-                    // TODO: add stored procedure
-                    // TODO: create functions
                     String query = "insert into bookingq_" + date + "_" + parameters[len - 3]
                             + " (date, train_id, num_passenger,pref,names) values ('" + date + "','"
                             + parameters[len - 3] + "'," + parameters[0] + ",'" + (parameters[len - 1]).toLowerCase()
                             + "',"
                             + "'" + passenger_names + "')";
 
-                    // + "," + "'" + passenger_ages + "'" + "," + "'" + passenger_genders + "'" +
-                    // ")";
-
-                    // System.out.println(query);
                     responseQuery = getResultSet(conn, query, 1);
                     while (responseQuery.equals("issue")) {
                         responseQuery = getResultSet(conn, query, 1);
                     }
-                    // = "******* Dummy result ******";
-
-                    // ----------------------------------------------------------------
 
                     // Sending data back to the client
                     printWriter.println(responseQuery);
-                    // System.out.println("\nSent results to client - "
-                    // + socketConnection.getRemoteSocketAddress().toString() );
 
-                    // conn.commit();
                 }
 
             } catch (SQLException e) {
 
                 System.out.println("Client Disconnected");
-                // try {
-                // conn.rollback();
-                // } catch (SQLException e1) {
-                // e1.printStackTrace();
-                // }
-
-                // ! changes here
 
             }
 
@@ -177,20 +135,14 @@ class QueryRunner implements Runnable {
 }
 
 /**
- * Main Class to controll the program flow
+ * Main Class to control the program flow
  */
-public class temp {
+public class ServiceModule {
     static int serverPort = 7005;
     static int numServerCores = 2;
-    private final String url = "jdbc:postgresql://localhost/railway_reservation_system";
-    private final String user = "postgres";
-    private final String password = "1421";
-    // private final String password = "iitropar";
 
     // ------------ Main----------------------
     public static void main(String[] args) throws IOException {
-        temp app = new temp();
-        // Connection conn = app.connect();
         // Creating a thread pool
         ExecutorService executorService = Executors.newFixedThreadPool(numServerCores);
 
@@ -206,12 +158,8 @@ public class temp {
             System.out.println("Accepted client :"
                     + socketConnection.getRemoteSocketAddress().toString()
                     + "\n");
-            // Create a runnable task
-            // Runnable runnableTask = new QueryRunner(socketConnection, conn);
             Runnable runnableTask = new QueryRunner(socketConnection);
-            // Submit task for execution
             executorService.submit(runnableTask);
         }
-
     }
 }

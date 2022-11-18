@@ -13,6 +13,7 @@ public class routePlanner {
     private final String url = "jdbc:postgresql://localhost/train_schedule";
     private final String user = "postgres";
     private final String password = "1421";
+    // private final String password = "iitropar";
 
     public Connection connect() {
         Connection conn = null;
@@ -27,7 +28,6 @@ public class routePlanner {
 
     public void getResultSet(Connection conn, String query) {
         try {
-            // 1 : request
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(query);
             ResultSetMetaData rsmd = rs.getMetaData();
@@ -51,7 +51,7 @@ public class routePlanner {
             stmt.executeUpdate(query);
 
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            // System.out.println(e.getMessage());
 
         }
 
@@ -76,11 +76,11 @@ public class routePlanner {
                     + "' and arrival_date = '" + doj + "' ";
             app.getResultSet(conn, query);
             System.out.println("Paths with one stop: ");
-            query = "select * from one_stop where s = '" + src + "' and d = '" + dest + "' and doj = '" + doj + "' ";
+            query = "select * from one_stop where src = '" + src + "' and dest = '" + dest + "' and doj = '" + doj
+                    + "' ";
             app.getResultSet(conn, query);
 
         }
-        // app.getResultSet(conn, join);
         br.close();
 
     }

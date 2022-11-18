@@ -5,10 +5,10 @@ create table routes(
     train_id varchar(255) not null,
     src varchar(255),
     dest varchar(255),
-    arrival_time varchar(255),
-    departure_time varchar(255),
-    arrival_date varchar(255),
-    departure_date varchar(255)
+    src_departure_time varchar(255),
+    dest_arrival_time varchar(255),
+    src_departure_date varchar(255),
+    dest_arrival_date varchar(255)
 );
 --insert into routes(train_id,src,dest,arrival_time,departure_time,arrival_date,departure_date)values ("12141","ABC asd","BCD","05:30","06:30","02-55-89","05-58-98");
 Create function check_time(t1 varchar(255),t2 varchar(255),d1 varchar(255),d2 varchar(255))  
@@ -59,9 +59,6 @@ Begin
             end if;
         end if;
     end if;
-    
 
-
-    
 End;  
 $$; 

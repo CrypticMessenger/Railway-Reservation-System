@@ -11,6 +11,7 @@ public class ParseSchedule {
     private final String url = "jdbc:postgresql://localhost/train_schedule";
     private final String user = "postgres";
     private final String password = "1421";
+    // private final String password = "iitropar";
 
     public Connection connect() {
         Connection conn = null;
@@ -25,26 +26,20 @@ public class ParseSchedule {
 
     public void getResultSet(Connection conn, String query) {
         try {
-            // 1 : request
             Statement stmt = conn.createStatement();
-            // ResultSet rs = stmt.executeQuery(query);
             stmt.executeUpdate(query);
-
         } catch (SQLException e) {
             System.out.println(e.getMessage());
-
         }
-
     }
 
     public static void main(String[] args) throws Exception {
         ParseSchedule app = new ParseSchedule();
-
         Connection conn = app.connect();
-
         File file = new File(
-                "D:\\Desktop\\Multi-Thread_sample\\Multi-Thread_sample\\testSubject\\Experiment2\\Reservation-System-Project\\client\\train_schedule.txt");
+                "D:\\Desktop\\Multi-Thread_sample\\Multi-Thread_sample\\testSubject\\Experiment3\\Reservation-System-Project\\client\\train_schedule.txt");
         BufferedReader br = new BufferedReader(new FileReader(file));
+
         String st;
         String train_id = "";
         String station_name = "";
@@ -54,7 +49,6 @@ public class ParseSchedule {
         String departure_date = "";
         int num_line = 0;
         while ((st = br.readLine()) != null && !(st.equals("*"))) {
-            // System.out.println(st);
             if (st.equals("#")) {
                 String[] station_names = station_name.split(",");
                 String[] arrival_dates = arrival_date.split(",");
@@ -62,17 +56,18 @@ public class ParseSchedule {
                 String[] departure_dates = departure_date.split(",");
                 String[] departure_times = departure_time.split(",");
                 int len = station_names.length;
-                // System.out.println(len);
                 for (int i = 0; i < len; i++) {
                     for (int j = i + 1; j < len; j++) {
-                        String query = "insert into routes(train_id,src,dest,arrival_time,departure_time,arrival_date,departure_date)values ("
+                        String query = "insert into routes(train_id,src,dest,src_departure_time,dest_arrival_time,src_departure_date,dest_arrival_date)values ("
                                 + "'" + train_id + "','" + station_names[i] + "','" + station_names[j] + "','" +
                                 departure_times[i]
                                 + "','" + arrival_times[j] + "','" + departure_dates[i] + "','" +
                                 arrival_dates[j] + "')";
+                        // System.out.println(query);
                         app.getResultSet(conn, query);
                     }
                 }
+                System.out.println("-----------------------------------------------------------");
                 num_line = 0;
                 continue;
             }
@@ -82,7 +77,6 @@ public class ParseSchedule {
                 num_line++;
             } else if (num_line == 1) {
                 String[] parameters = st.split(",");
-                // System.out.println(parameters.length);
                 station_name = station_name + parameters[0];
                 arrival_time += parameters[1];
                 departure_time += parameters[2];
@@ -100,7 +94,7 @@ public class ParseSchedule {
             }
 
         }
-        String join = "select r1.train_id as tid1,r2.train_id as tid2,r1.src as s, r1.dest as stop, r2.dest as d,r1.arrival_time as st1,r1.departure_time as stop_time,r2.arrival_time as stop_arrival,r2.departure_time as final_time, r1.arrival_date as doj, r1.departure_date as stop_doj, r2.departure_date as eoj  into one_stop from routes as r1,routes as r2 where r1.dest = r2.src and r1.train_id != r2.train_id and check_time(r1.arrival_time,r2.departure_time,r1.arrival_date,r2.departure_date)= 'true'";
+        String join = "select r1.train_id as train1_id,r2.train_id as train2_id,r1.src as src, r1.dest as stop, r2.dest as dest,r1.arrival_time as src_dept_time,r1.departure_time as stop_arrival_time,r2.arrival_time as stop_dept_time,r2.departure_time as dest_reach_time, r1.arrival_date as doj, r1.departure_date as stop_doj_1,r2.arrival_date as stop_doj_2, r2.departure_date as eoj  into one_stop from routes as r1,routes as r2 where r1.dest = r2.src and r1.train_id != r2.train_id and check_time(r1.arrival_time,r2.departure_time,r1.arrival_date,r2.departure_date)= 'true'";
         app.getResultSet(conn, join);
         br.close();
 
