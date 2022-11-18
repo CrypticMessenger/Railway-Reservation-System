@@ -46,6 +46,7 @@ public class ParseSchedule {
         String arrival_time = "";
         String departure_time = "";
         String arrival_date = "";
+
         String departure_date = "";
         int num_line = 0;
         while ((st = br.readLine()) != null && !(st.equals("*"))) {
@@ -67,7 +68,13 @@ public class ParseSchedule {
                         app.getResultSet(conn, query);
                     }
                 }
-                System.out.println("-----------------------------------------------------------");
+                // System.out.println("-----------------------------------------------------------");
+                train_id = "";
+                station_name = "";
+                arrival_time = "";
+                departure_time = "";
+                arrival_date = "";
+                departure_date = "";
                 num_line = 0;
                 continue;
             }
@@ -92,9 +99,20 @@ public class ParseSchedule {
                 arrival_date += "," + parameters[3];
                 departure_date += "," + parameters[4];
             }
-
         }
-        String join = "select r1.train_id as train1_id,r2.train_id as train2_id,r1.src as src, r1.dest as stop, r2.dest as dest,r1.arrival_time as src_dept_time,r1.departure_time as stop_arrival_time,r2.arrival_time as stop_dept_time,r2.departure_time as dest_reach_time, r1.arrival_date as doj, r1.departure_date as stop_doj_1,r2.arrival_date as stop_doj_2, r2.departure_date as eoj  into one_stop from routes as r1,routes as r2 where r1.dest = r2.src and r1.train_id != r2.train_id and check_time(r1.arrival_time,r2.departure_time,r1.arrival_date,r2.departure_date)= 'true'";
+
+        // String join = "select r1.train_id as train1_id,r2.train_id as
+        // train2_id,r1.src as src, r1.dest as stop, r2.dest as
+        // dest,r1.src_departure_time as src_dept_time,r1.dest_arrival_time as
+        // stop_arrival_time,r2.src_departure_time as
+        // stop_dept_time,r2.dest_arrival_time as dest_arrival_time,
+        // r1.src_departure_date as doj, r1.dest_arrival_date as
+        // stop_doj_1,r2.src_departure_date as stop_doj_2, r2.dest_arrival_date as eoj
+        // into one_stop from routes as r1,routes as r2, lateral (select
+        // check_time(r1.dest_arrival_time,r2.src_departure_time,r1.dest_arrival_date,r2.src_departure_date)
+        // as dist) l where r1.dest = r2.src and r1.train_id != r2.train_id and l.dist =
+        // 'true'";
+        String join = "select my_function()";
         app.getResultSet(conn, join);
         br.close();
 

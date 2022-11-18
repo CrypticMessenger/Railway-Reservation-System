@@ -63,7 +63,7 @@ public class routePlanner {
         Connection conn = app.connect();
 
         File file = new File(
-                "D:\\Desktop\\Multi-Thread_sample\\Multi-Thread_sample\\testSubject\\Experiment2\\Reservation-System-Project\\client\\route_query.txt");
+                "D:\\Desktop\\Multi-Thread_sample\\Multi-Thread_sample\\testSubject\\Experiment3\\Reservation-System-Project\\client\\route_query.txt");
         BufferedReader br = new BufferedReader(new FileReader(file));
         String st = "";
         while ((st = br.readLine()) != null && !(st.equals("#"))) {
@@ -71,15 +71,21 @@ public class routePlanner {
             String src = parameters[0];
             String dest = parameters[1];
             String doj = parameters[2];
+            System.out.println(src + " " + dest + " " + doj + "\n");
+            System.out.println("***********************************************************************************");
             System.out.println("Direct path: ");
             String query = "select * from routes where src = '" + src + "' and dest = '" + dest
-                    + "' and arrival_date = '" + doj + "' ";
+                    + "' and src_departure_date = '" + doj + "' ";
+            System.out.println(query);
             app.getResultSet(conn, query);
+            System.out.println(src + " " + dest + " " + doj + "\n");
+            System.out.println("------------------------------------------------------------------------------------");
             System.out.println("Paths with one stop: ");
             query = "select * from one_stop where src = '" + src + "' and dest = '" + dest + "' and doj = '" + doj
                     + "' ";
+            System.out.println(query);
             app.getResultSet(conn, query);
-
+            System.out.println("***********************************************************************************");
         }
         br.close();
 

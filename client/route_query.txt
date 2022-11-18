@@ -1,3 +1,6 @@
-Karnal (RL),New Delhi,16-11-2022
-Daulatpur Chowk,Sabarmati,16-11-2022
+Karnal ,New Delhi,16-11-2022
+Kalka,Panipat Jn,16-11-2022
+Kalka,Karnal (RL),16-11-2022
+Chandigarh,Karnal (RL),16-11-2022
+Panipat Jn,New Delhi,16-11-2022
 #
