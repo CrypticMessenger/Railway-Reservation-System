@@ -11,67 +11,6 @@ create table routes(
     dest_arrival_date varchar(255)
 );
 --insert into routes(train_id,src,dest,arrival_time,departure_time,arrival_date,departure_date)values ("12141","ABC asd","BCD","05:30","06:30","02-55-89","05-58-98");
-Create function check_time(t1 varchar(255),t2 varchar(255),d1 varchar(255),d2 varchar(255))  
-returns varchar(255)
-language plpgsql  
-as  
-$$  
-Declare  
-   year1 varchar(255) ;
-   year2 varchar(255) ;
-   mon1 varchar(255) ;
-   mon2 varchar(255) ;
-   day1 varchar(255) ;
-   day2 varchar(255) ;
-   hr1 varchar(255) ;
-   hr2 varchar(255) ;
-   min1 varchar(255) ;
-   min2 varchar(255) ;
-Begin 
-   year1 := split_part(d1,'-',3);
-   mon1 := split_part(d1,'-',2);
-   day1 := split_part(d1,'-',1);
-   year2 := split_part(d2,'-',3);
-   mon2 := split_part(d2,'-',2);
-   day2 := split_part(d2,'-',1);
-   hr1 := split_part(t1,':',1);
-   min1 := split_part(t1,':',2);
-   hr2 := split_part(t2,':',1);
-   min2 := split_part(t2,':',2);
-   raise notice '%',year1;
-   raise notice '%',year2;
-   raise notice '%',mon1;
-   raise notice '%',mon2;
-   raise notice '%',day1;
-   raise notice '%',day2;
-   raise notice '%',hr1;
-   raise notice '%',hr2;
-   raise notice '%',min1;
-   raise notice '%',min2;
-    if(year1>year2) then 
-        return 'false';
-    elsif (year1<year2) then return 'true';
-    else 
-        if(mon1 > mon2) then return 'false';
-        elsif (mon1 < mon2) then return 'true';
-        else
-            if (day1 > day2) then return 'false';
-            elsif (day1 < day2) then return 'true';
-            else 
-                if(hr1 > hr2) then return 'false';
-                elsif (hr1 < hr2) then return 'true';
-                else 
-                    if(min1 > min2) then return 'false';
-                    elsif (min1 < min2) then return 'true';
-                    else return 'true';
-                    end if;
-                end if;
-            end if;
-        end if;
-    end if;
-
-End;  
-$$; 
 
 create table one_stop(
     train1_id varchar(255),
@@ -88,6 +27,22 @@ create table one_stop(
     stop_doj_2 varchar(255),
     eoj varchar(255)
 );
+
+
+CREATE FUNCTION intval(character varying) RETURNS integer AS $$
+
+SELECT
+CASE
+    WHEN length(btrim(regexp_replace($1, '[^0-9]', '','g')))>0 THEN btrim(regexp_replace($1, '[^0-9]', '','g'))::integer
+    ELSE 0
+END AS intval;
+
+$$
+LANGUAGE SQL
+IMMUTABLE
+RETURNS NULL ON NULL INPUT;
+
+
 create function my_function() 
 returns void 
 language plpgsql 
@@ -97,30 +52,51 @@ as
     outer_ptr record;
     inner_ptr record;
     year1 varchar(255) ;
-   year2 varchar(255) ;
-   mon1 varchar(255) ;
-   mon2 varchar(255) ;
-   day1 varchar(255) ;
-   day2 varchar(255) ;
-   hr1 varchar(255) ;
-   hr2 varchar(255) ;
-   min1 varchar(255) ;
-   min2 varchar(255) ;
+    year2 varchar(255) ;
+    mon1 varchar(255) ;
+    mon2 varchar(255) ;
+    day1 varchar(255) ;
+    day2 varchar(255) ;
+    hr1 varchar(255) ;
+    hr2 varchar(255) ;
+    min1 varchar(255) ;
+    min2 varchar(255) ;
+    year11 integer ;
+    year22 integer ;
+    mon11 integer ;
+    mon22 integer ;
+    day11 integer ;
+    day22 integer ;
+    hr11 integer ;
+    hr22 integer ;
+    min11 integer ;
+    min22 integer ;
  Begin
     for outer_ptr in select * from routes
     loop 
         for inner_ptr in select * from routes
         loop 
             year1 := split_part(outer_ptr.dest_arrival_date,'-',3);
+            year11:=intval(year1);
             mon1 := split_part(outer_ptr.dest_arrival_date,'-',2);
+            mon11 := intval(mon1);
             day1 := split_part(outer_ptr.dest_arrival_date,'-',1);
+            day11 :=intval(day1);
             year2 := split_part(inner_ptr.src_departure_date,'-',3);
+            year22 :=intval(year2);
             mon2 := split_part(inner_ptr.src_departure_date,'-',2);
+            mon22:=intval(mon2);
             day2 := split_part(inner_ptr.src_departure_date,'-',1);
+            day22:=intval(day2);
             hr1 := split_part(outer_ptr.dest_arrival_time,':',1);
+            hr11:=intval(hr1);
             min1 := split_part(outer_ptr.dest_arrival_time,':',2);
+            min11:=intval(min1);
             hr2 := split_part(inner_ptr.src_departure_time,':',1);
+            hr22:=intval(hr2);
             min2 := split_part(inner_ptr.src_departure_time,':',2);
+            min22:=intval(min2);
+
             -- raise exception '%',year1;
             -- raise exception '%',year2;
             -- raise exception '%',mon1;
@@ -135,20 +111,20 @@ as
             --  r2.dest_arrival_time as dest_arrival_time,
             --   r1.src_departure_date as doj, r1.dest_arrival_date as stop_doj_1,r2.src_departure_date as stop_doj_2, r2.dest_arrival_date as eoj  
             if outer_ptr.train_id != inner_ptr.train_id and outer_ptr.dest = inner_ptr.src then
-                if(year1>year2) then
-                elsif (year1<year2) then insert into one_stop values (outer_ptr.train_id, inner_ptr.train_id, outer_ptr.src,outer_ptr.dest,inner_ptr.dest,outer_ptr.src_departure_time,outer_ptr.dest_arrival_time,inner_ptr.src_departure_time,inner_ptr.dest_arrival_time,outer_ptr.src_departure_date,outer_ptr.dest_arrival_date,inner_ptr.src_departure_date,inner_ptr.dest_arrival_date );
+                if(year11>year22) then
+                elsif (year11<year22) then insert into one_stop values (outer_ptr.train_id, inner_ptr.train_id, outer_ptr.src,outer_ptr.dest,inner_ptr.dest,outer_ptr.src_departure_time,outer_ptr.dest_arrival_time,inner_ptr.src_departure_time,inner_ptr.dest_arrival_time,outer_ptr.src_departure_date,outer_ptr.dest_arrival_date,inner_ptr.src_departure_date,inner_ptr.dest_arrival_date );
                 else             
-                    if(mon1 > mon2) then 
-                    elsif (mon1 < mon2) then insert into one_stop values (outer_ptr.train_id, inner_ptr.train_id, outer_ptr.src,outer_ptr.dest,inner_ptr.dest,outer_ptr.src_departure_time,outer_ptr.dest_arrival_time,inner_ptr.src_departure_time,inner_ptr.dest_arrival_time,outer_ptr.src_departure_date,outer_ptr.dest_arrival_date,inner_ptr.src_departure_date,inner_ptr.dest_arrival_date );
+                    if(mon11 > mon22) then 
+                    elsif (mon11 < mon22) then insert into one_stop values (outer_ptr.train_id, inner_ptr.train_id, outer_ptr.src,outer_ptr.dest,inner_ptr.dest,outer_ptr.src_departure_time,outer_ptr.dest_arrival_time,inner_ptr.src_departure_time,inner_ptr.dest_arrival_time,outer_ptr.src_departure_date,outer_ptr.dest_arrival_date,inner_ptr.src_departure_date,inner_ptr.dest_arrival_date );
                     else
-                        if (day1 > day2) then 
-                        elsif (day1 < day2) then insert into one_stop values (outer_ptr.train_id, inner_ptr.train_id, outer_ptr.src,outer_ptr.dest,inner_ptr.dest,outer_ptr.src_departure_time,outer_ptr.dest_arrival_time,inner_ptr.src_departure_time,inner_ptr.dest_arrival_time,outer_ptr.src_departure_date,outer_ptr.dest_arrival_date,inner_ptr.src_departure_date,inner_ptr.dest_arrival_date );
+                        if (day11 > day22) then 
+                        elsif (day11 < day22) then insert into one_stop values (outer_ptr.train_id, inner_ptr.train_id, outer_ptr.src,outer_ptr.dest,inner_ptr.dest,outer_ptr.src_departure_time,outer_ptr.dest_arrival_time,inner_ptr.src_departure_time,inner_ptr.dest_arrival_time,outer_ptr.src_departure_date,outer_ptr.dest_arrival_date,inner_ptr.src_departure_date,inner_ptr.dest_arrival_date );
                         else 
-                            if(hr1 > hr2) then 
-                            elsif (hr1 < hr2) then insert into one_stop values (outer_ptr.train_id, inner_ptr.train_id, outer_ptr.src,outer_ptr.dest,inner_ptr.dest,outer_ptr.src_departure_time,outer_ptr.dest_arrival_time,inner_ptr.src_departure_time,inner_ptr.dest_arrival_time,outer_ptr.src_departure_date,outer_ptr.dest_arrival_date,inner_ptr.src_departure_date,inner_ptr.dest_arrival_date );
+                            if(hr11 > hr22) then 
+                            elsif (hr11 < hr22) then insert into one_stop values (outer_ptr.train_id, inner_ptr.train_id, outer_ptr.src,outer_ptr.dest,inner_ptr.dest,outer_ptr.src_departure_time,outer_ptr.dest_arrival_time,inner_ptr.src_departure_time,inner_ptr.dest_arrival_time,outer_ptr.src_departure_date,outer_ptr.dest_arrival_date,inner_ptr.src_departure_date,inner_ptr.dest_arrival_date );
                             else 
-                                if(min1 > min2) then
-                                elsif (min1 < min2) then insert into one_stop values (outer_ptr.train_id, inner_ptr.train_id, outer_ptr.src,outer_ptr.dest,inner_ptr.dest,outer_ptr.src_departure_time,outer_ptr.dest_arrival_time,inner_ptr.src_departure_time,inner_ptr.dest_arrival_time,outer_ptr.src_departure_date,outer_ptr.dest_arrival_date,inner_ptr.src_departure_date,inner_ptr.dest_arrival_date );
+                                if(min11 > min22) then
+                                elsif (min11 < min22) then insert into one_stop values (outer_ptr.train_id, inner_ptr.train_id, outer_ptr.src,outer_ptr.dest,inner_ptr.dest,outer_ptr.src_departure_time,outer_ptr.dest_arrival_time,inner_ptr.src_departure_time,inner_ptr.dest_arrival_time,outer_ptr.src_departure_date,outer_ptr.dest_arrival_date,inner_ptr.src_departure_date,inner_ptr.dest_arrival_date );
                                 else insert into one_stop values (outer_ptr.train_id, inner_ptr.train_id, outer_ptr.src,outer_ptr.dest,inner_ptr.dest,outer_ptr.src_departure_time,outer_ptr.dest_arrival_time,inner_ptr.src_departure_time,inner_ptr.dest_arrival_time,outer_ptr.src_departure_date,outer_ptr.dest_arrival_date,inner_ptr.src_departure_date,inner_ptr.dest_arrival_date );
                                 end if;
                             end if;
@@ -160,5 +136,4 @@ as
     end loop;
 End;
  $$;
-
 

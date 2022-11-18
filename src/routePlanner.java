@@ -71,21 +71,17 @@ public class routePlanner {
             String src = parameters[0];
             String dest = parameters[1];
             String doj = parameters[2];
-            System.out.println(src + " " + dest + " " + doj + "\n");
-            System.out.println("***********************************************************************************");
+            System.out.println("\n***********************************************************************************");
             System.out.println("Direct path: ");
             String query = "select * from routes where src = '" + src + "' and dest = '" + dest
                     + "' and src_departure_date = '" + doj + "' ";
-            System.out.println(query);
             app.getResultSet(conn, query);
-            System.out.println(src + " " + dest + " " + doj + "\n");
             System.out.println("------------------------------------------------------------------------------------");
             System.out.println("Paths with one stop: ");
             query = "select * from one_stop where src = '" + src + "' and dest = '" + dest + "' and doj = '" + doj
                     + "' ";
-            System.out.println(query);
             app.getResultSet(conn, query);
-            System.out.println("***********************************************************************************");
+            System.out.println("***********************************************************************************\n");
         }
         br.close();
 
