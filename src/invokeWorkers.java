@@ -4,7 +4,7 @@ import java.util.concurrent.TimeUnit;
 
 public class invokeWorkers implements Runnable {
     /*************************/
-    int secondLevelThreads = 30;
+    int secondLevelThreads = 2;
 
     /**************************/
     public invokeWorkers() {
