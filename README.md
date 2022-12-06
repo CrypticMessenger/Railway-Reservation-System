@@ -1,3 +1,7 @@
+<center>
+<h1> Railway Reservation System </h1>
+</center>
+
 ## Folder Structure
 
 The workspace contains following folders, where:
