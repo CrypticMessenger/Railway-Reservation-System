@@ -1,5 +1,5 @@
-## Instructions
-- In case of error regarding password ```ALTER USER postgres WITH PASSWORD 'iitropar';```
+## Changes to be performed before running.
+- In case of error regarding password ```ALTER USER postgres WITH PASSWORD '1421';```
 - mv ./lib/postgresql-42.5.0.jar ./src
 - unzip postgresql-42.5.0.jar
 - change password in ```App.java```
@@ -18,9 +18,6 @@
 - [x] 3 team member extention
 - [x] testing
 
-## Getting Started
-
-Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
 
 ## Folder Structure
 
@@ -33,14 +30,42 @@ The workspace contains two folders by default, where:
 - `bin` : the folder to maintain .class files
 - `response` : the folder to maintain output files 
 - `tests` : the folder containing rigourous tests
-
-Meanwhile, the compiled output files will be generated in the `bin` folder by default.
-
-> If you want to customize the folder structure, open `.vscode/settings.json` and update the related settings there.
-
-## Dependency Management
-
-The `JAVA PROJECTS` view allows you to manage your dependencies. More details can be found [here](https://github.com/microsoft/vscode-java-dependency#manage-dependencies).
+  
+.
+├── **README.md**
+├── **bin**
+│   ├── App.class
+│   ├── ParseSchedule.class
+│   ├── QueryRunner.class
+│   ├── ServiceModule.class
+│   ├── client.class
+│   ├── invokeWorkers.class
+│   ├── routePlanner.class
+│   └── sendQuery.class
+├── **client**
+│   ├── admin.txt
+│   ├── route_query.txt
+│   ├── train_schedule.txt
+│   └── train_schedule1.txt
+├── **db**
+│   ├── cleanDB.sql
+│   ├── makeDB.sql
+│   └── routeDB.sql
+├── **img**
+│   ├── plan1.jpg
+│   ├── plan2.jpg
+│   └── plan3.pdf
+├── **lib**
+│   └── postgresql-42.5.0.jar
+├── **response**
+└── **src**
+    ├── App.java
+    ├── ParseSchedule.java
+    ├── ServiceModule.java
+    ├── client.java
+    ├── invokeWorkers.java
+    ├── routePlanner.java
+    └── sendQuery.java
 
 ## Contributors  
 | **Name**      | **Entry Number** | 
@@ -50,7 +75,7 @@ The `JAVA PROJECTS` view allows you to manage your dependencies. More details ca
 | Ankit Sharma      | 2020CSB1072       |
 
 
-<b>Under the guidance of Dr. Vishwanath Gunturi </b>
+<b>*Under the guidance of Dr. Vishwanath Gunturi *</b>
 
 
 
