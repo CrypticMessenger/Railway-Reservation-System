@@ -1,4 +1,5 @@
 -- create database railway_reservation_system;
+-- \c railway_reservation_system
 drop table date_train_records;
 create table date_train_records(
     date varchar(255) not null,

@@ -12,8 +12,43 @@
 - change password in ```ServiceModule.java```
 - use ```time java App.java``` to time the running java program.
 
+## Steps to run and test :
+### for booking requests:
+To run this program, you will need to use three terminal windows.
+
+- In the first terminal window:
+  - you will need to start the Postgres server. This can be done by:
+  ```
+  sudo service postgresql start         
+  sudo su postgres
+  ```
+  - run following commands to create and connect to Database:
+  ```
+  create database railway_reservation_system;
+  \c railway_reservation_system
+  ```
+  - run following command to fill the database with apt triggers and relations:
+  ```
+  \i makeDB.sql
+  -- or copy the content of makeDB.sql and paste it in the terminal.
+  ```
+- In the second terminal window, you will need to run the `App.java` and `ServiceModule.java` files. These files are responsible for starting the application by filling in the trains available in the database and servicing server, respectively.
+  - To run these files, navigate to the `src` where they are located, and use the java command to execute them:
+  ```
+  cd ./src
+  javac *.java  
+  java App
+  java ServiceModule
+  ```
+- In the third terminal window, you will need to run the `client.java` file. This file is responsible for starting sending client booking requests to the servicing server. 
+  - To run this file, navigate to the directory where it is located i.e. `src`, and use the java command to execute it.
+  ```
+  cd ./src
+  java client.java
+  ```
+- Once all three terminal windows are running, the program will be fully operational.
+
 ## Progress 
-- [x] correct input format (slr,and ages and genders)
 - [x] multilevel threading support
 - [x] 3 team member extention
 - [x] testing
