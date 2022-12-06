@@ -143,6 +143,7 @@ To start querying for routes with at most one stop, you will need to use 2 termi
 - Program uses multithreading for scalablility purposes while taking care of concurrency issues taught in this course.
 
 ## Contributors  
+<b>Under the guidance of Dr. Vishwanath Gunturi : </b><br>
 | **Name**      | **Entry Number** | 
 | :---        |    :----:   |  
 | Aditya_      | 2020CSB1065      | 
@@ -150,7 +151,6 @@ To start querying for routes with at most one stop, you will need to use 2 termi
 | Ankit Sharma      | 2020CSB1072       |
 
 
-<b>*Under the guidance of Dr. Vishwanath Gunturi *</b>
 
 
 
