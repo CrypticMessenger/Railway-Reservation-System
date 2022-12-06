@@ -30,10 +30,10 @@ The workspace contains two folders by default, where:
 - `bin` : the folder to maintain .class files
 - `response` : the folder to maintain output files 
 - `tests` : the folder containing rigourous tests
-  
+```
 .
-├── **README.md**
-├── **bin**
+├── README.md
+├── bin
 │   ├── App.class
 │   ├── ParseSchedule.class
 │   ├── QueryRunner.class
@@ -42,23 +42,23 @@ The workspace contains two folders by default, where:
 │   ├── invokeWorkers.class
 │   ├── routePlanner.class
 │   └── sendQuery.class
-├── **client**
+├── client
 │   ├── admin.txt
 │   ├── route_query.txt
 │   ├── train_schedule.txt
 │   └── train_schedule1.txt
-├── **db**
+├── db
 │   ├── cleanDB.sql
 │   ├── makeDB.sql
 │   └── routeDB.sql
-├── **img**
+├── img
 │   ├── plan1.jpg
 │   ├── plan2.jpg
 │   └── plan3.pdf
-├── **lib**
+├── lib
 │   └── postgresql-42.5.0.jar
-├── **response**
-└── **src**
+├── response
+└── src
     ├── App.java
     ├── ParseSchedule.java
     ├── ServiceModule.java
@@ -66,7 +66,7 @@ The workspace contains two folders by default, where:
     ├── invokeWorkers.java
     ├── routePlanner.java
     └── sendQuery.java
-
+```
 ## Contributors  
 | **Name**      | **Entry Number** | 
 | :---        |    :----:   |  
