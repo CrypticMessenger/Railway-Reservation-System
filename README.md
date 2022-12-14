@@ -150,7 +150,7 @@ To start querying for routes with at most one stop, you will need to use 2 termi
 <b>Under the guidance of Dr. Vishwanath Gunturi : </b><br>
 | **Name**      | **Entry Number** | 
 | :---        |    :----:   |  
-| Aditya_      | 2020CSB1065      | 
+| Aditya      | 2020CSB1065      | 
 | Amit Kumar   | 2020CSB1070        | 
 | Ankit Sharma      | 2020CSB1072       |
 
